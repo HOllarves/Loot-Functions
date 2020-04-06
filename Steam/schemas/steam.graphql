@@ -1,0 +1,174 @@
+
+type Query {
+  user(id: ID username: String): SteamUser
+  featuredCategories: [FeaturedCategory]
+  featuredGames: FeaturedGames
+  gameDetail(id: ID!): SteamGameDetail
+  gameNews(id: ID!): [GameNews]
+  userGames(id: ID username: String): [UserGame]
+}
+
+type GameNews {
+  gid: String
+  title: String!
+  url: String
+  is_external_url: Boolean
+  author: String
+  contents: String
+  feedlabel: String
+  date: Int
+  feed_type: Int
+  appid: Int
+}
+
+type UserGame {
+  name: String!
+  appID: Int
+  playTime: Int
+  playTime2: Int
+  logoUrl: String
+  iconUrl: String
+}
+
+type SteamUser {
+  avatar: SteamAvatar
+  steamID: String!
+  url: String!
+  created: Int!
+  lastLogOff: Int!
+  nickname: String!
+  realName: String
+  primaryGroupId: String
+  personaState: Int
+  personaStateFlags: Int
+  commentPermission: Boolean
+  visibilityState: Int
+  countryCode: String
+  cityId: Int
+  gameServerIp: String
+  gameServerSteamID: String
+  gameExtraInfo: String
+  gameID: String
+}
+
+type FeaturedCategory {
+  id: String
+  name: String
+  items: [FeaturedItem]
+}
+
+type FeaturedItem {
+  name: String!
+  header_image: String
+  body: String
+  url: String
+}
+
+type FeaturedGame {
+  id: Int!
+  type: Int
+  name: String!
+  discounted: Boolean!
+  discount_percent: Int
+  original_price: Int
+  final_price: Int
+  currency: String
+  large_capsule_image: String
+  small_capsule_image: String
+  windows_available: Boolean!
+  mac_available: Boolean!
+  linux_available: Boolean!
+  streamingvideo_available: Boolean!
+  header_image: String
+}
+
+type FeaturedGames {
+  featured_win: [FeaturedGame]
+  featured_mac: [FeaturedGame]
+  featured_linux: [FeaturedGame]
+}
+
+type SteamGameDetail {
+  type: String
+  name: String!
+  steam_appid: Int!
+  required_age: Int
+  is_free: Boolean!
+  controller_support: String
+  detailed_description: String
+  about_the_game: String
+  short_description: String
+  header_image: String
+  website: String
+  pc_requirements: PCRequirement
+  mac_requirements: PCRequirement
+  linux_requirements: PCRequirement
+  legal_notice: String
+  drm_notice: String
+  developers: [String]
+  publishers: [String]
+  price_overview: PriceOverview
+  platforms: Platforms
+  categories: [GameCategory]
+  genres: [GameGenre]
+  screenshots: [GameScreenshot]
+  release_date: GameReleaseDate
+  recommendations: GameRecomendations
+  background: String
+}
+
+type Platforms {
+  windows: Boolean!
+  mac: Boolean!
+  linux: Boolean!
+}
+
+type GameRecomendations {
+  total: Int
+}
+
+type GameReleaseDate {
+  coming_soon: Boolean
+  date: String
+}
+
+type GameCategory {
+  id: Int
+  description: String
+}
+
+type GameScreenshot {
+  id: Int
+  path_thumbnail: String
+  path_full: String
+}
+
+type GameVideo {
+  id: Int
+  name: String
+  thumbnail: String
+}
+
+type GameGenre {
+  id: String
+  description: String
+}
+
+type PCRequirement {
+  minimum: String
+  recommended: String
+}
+
+type PriceOverview {
+  currency: String
+  initial: Int
+  final: Int
+  discount_percent: Int
+  initial_formatted: String
+}
+
+type SteamAvatar {
+  small: String
+  medium: String
+  large: String
+}
