@@ -1,11 +1,30 @@
 
 type Query {
-  user(id: ID username: String): SteamUser
+  user(uid: ID username: String): SteamUser
+  userRecentGames(uid: ID username: String): [RecentGames]
+  userLevel(uid: ID username: String): Int
   featuredCategories: [FeaturedCategory]
   featuredGames: FeaturedGames
   gameDetail(id: ID!): SteamGameDetail
   gameNews(id: ID!): [GameNews]
   userGames(id: ID username: String): [UserGame]
+  userFriends(uid: ID username: String): [SteamFriend]
+}
+
+
+type SteamFriend {
+  steamID: String!
+  relationship: String
+  friendSince: Int
+  username: String
+}
+
+type RecentGames {
+  name: String!
+  appID: Int!
+  playTime: Int
+  logoUrl: String
+  iconUrl: String
 }
 
 type GameNews {

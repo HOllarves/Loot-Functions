@@ -1,7 +1,8 @@
 require('dotenv').config()
-
-const SteamAPI = require('steamapi'),
-  steam = new SteamAPI(process.env.STEAM_KEY)
+// Steam API node lib
+const SteamAPI = require('steamapi')
+// Instanciating new class
+const steam = new SteamAPI(process.env.STEAM_KEY)
 
 module.exports = {
   Query: {
@@ -24,7 +25,6 @@ module.exports = {
     },
     gameDetail: async (parent, args, context) => {
       const { id } = args
-      console.log({ id })
       const game = await steam.getGameDetails(id)
       return game
     },
@@ -41,6 +41,36 @@ module.exports = {
       }
       const games = await steam.getUserOwnedGames(uid)
       return games
+    },
+    userRecentGames: async (parent, args, context) => {
+      let { uid } = args
+      const { username } = args
+      if (!uid) {
+        uid = await steam.resolve(`https://steamcommunity.com/id/${username}`)
+      }
+      const games = await steam.getUserRecentGames(uid)
+      return games
+    },
+    userLevel: async (parent, args, context) => {
+      let { uid } = args
+      const { username } = args
+      if (!uid) {
+        uid = await steam.resolve(`https://steamcommunity.com/id/${username}`)
+      }
+      const lvl = await steam.getUserLevel(uid)
+      return lvl
+    },
+    userFriends: async (parent, args, context) => {
+      let { uid } = args
+      const { username } = args
+      if (!uid) {
+        uid = await steam.resolve(`https://steamcommunity.com/id/${username}`)
+      }
+      let friends = await steam.getUserFriends(uid)
+      const friendIds = friends.map((f) => f.steamID).map((id) => steam.getUserSummary(id))
+      const friendNames = await Promise.all(friendIds)
+      friends = friends.map((f) => { return { ...f, username: friendNames.find((x) => x.steamID === f.steamID).nickname } })
+      return friends
     },
   },
 }
