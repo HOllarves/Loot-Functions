@@ -1,0 +1,96 @@
+type Query {
+  game(id:ID!): PS4Game
+}
+
+type PS4Game {
+  age_limit: Int
+  bucket: String
+  container_type: String
+  content_descriptors: [GameDescriptor]
+  content_origin: Int
+  content_rating: GameRating
+  content_type: String
+  default_sku: SKU
+  dob_required: Boolean
+  gameContentTypesList: [GameContentType]
+  game_contentType: String
+  images: [GameImage]
+  long_desc: String
+  metadata: Metadata
+  name: String
+  pageTypeId: Int
+  playable_platform: [String]
+  provider_name: String
+  release_date: String
+  restricted: Boolean
+  revision: Int
+  short_name: String
+  star_rating: StarRating
+  start: Int
+  timestamp: Int
+  title_name: String
+  top_category: String
+  total_results: Int
+}
+
+type StarRating {
+  total: String
+  score: String
+}
+
+type Metadata {
+  game_genre: MetadataItem
+  playable_platform: MetadataItem
+  tertiary_classification: MetadataItem
+  container_type: MetadataItem
+  genre: MetadataItem
+  secondary_classification: MetadataItem
+  primary_classification: MetadataItem
+}
+
+type MetadataItem {
+  name: String
+  values: [String]
+}
+
+type GameImage {
+  type: Int
+  url: String
+}
+
+type SKU {
+    amortizeFlag:Boolean
+    bundleExclusiveFlag:Boolean
+    chargeImmediatelyFlag:Boolean
+    charge_type_id:Int
+    credit_card_required_flag:Int
+    defaultSku:Boolean
+    display_price:String!
+    id: String!
+    is_original: Boolean
+    name: String
+    platforms: [Int]
+    price: Int
+    seasonPassExclusiveFlag: Boolean
+    skuAvailabilityOverrideFlag: Boolean
+    sku_type: String
+    type: String
+}
+
+type GameContentType {
+  name: String!
+  key: String!
+}
+
+type GameRating {
+  description: String
+  rating_system: String
+  url: String
+}
+
+type GameDescriptor {
+  description: String
+  url: String
+  name: String!
+}
+
