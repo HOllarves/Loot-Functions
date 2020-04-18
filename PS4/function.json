@@ -9,12 +9,12 @@
         "get",
         "post"
       ],
-      "route": "ps4"
+      "route": "psn"
     },
     {
       "type": "http",
       "direction": "out",
-      "name": "res"
+      "name": "$return"
     }
   ]
 }

@@ -1,8 +1,8 @@
 type Query {
-  game(id:ID!): PS4Game
+  PSNGame(id: ID! region: String): Game
 }
 
-type PS4Game {
+type Game {
   age_limit: Int
   bucket: String
   container_type: String

@@ -1,6 +1,6 @@
 const rp = require('request-promise')
 
-const uri = 'http://localhost:7071/api/steam'
+const uri = 'http://localhost:7071/steam'
 
 jest.setTimeout(10000)
 
