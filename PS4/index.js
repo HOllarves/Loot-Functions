@@ -1,11 +1,14 @@
-const { ApolloServer } = require('apollo-server-azure-functions')
+const { ApolloServer, gql } = require('apollo-server-azure-functions')
 const requireGraphSchema = require('require-graphql-file')
+const { buildFederatedSchema } = require('@apollo/federation')
 
 // Starting Apollo Server
+const typeDefs = requireGraphSchema('./ps4')
+const resolvers = require('./resolver')
+
 const server = new ApolloServer({
-  typeDefs: requireGraphSchema('./ps4'),
-  resolvers: require('./resolver'),
-  playground: true,
+  schema: buildFederatedSchema([{ typeDefs: gql(typeDefs), resolvers }]),
+  playground: false,
 })
 
 module.exports = server.createHandler()
