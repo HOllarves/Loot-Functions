@@ -6,7 +6,7 @@ const steam = new SteamAPI(process.env.STEAM_KEY)
 
 module.exports = {
   Query: {
-    user: async (parent, args, context) => {
+    SteamUser: async (parent, args, context) => {
       let { uid } = args
       const { username } = args
       if (!uid) {
@@ -15,25 +15,25 @@ module.exports = {
       const steamUser = await steam.getUserSummary(uid)
       return steamUser
     },
-    featuredCategories: async (parent, args, context) => {
+    SteamFeaturedCategories: async (parent, args, context) => {
       const featured = await steam.getFeaturedCategories()
       return featured
     },
-    featuredGames: async (parent, args, context) => {
+    SteamFeaturedGames: async (parent, args, context) => {
       const featured = await steam.getFeaturedGames()
       return featured
     },
-    gameDetail: async (parent, args, context) => {
+    SteamGameDetail: async (parent, args, context) => {
       const { id } = args
       const game = await steam.getGameDetails(id)
       return game
     },
-    gameNews: async (parent, args, context) => {
+    SteamGameNews: async (parent, args, context) => {
       const { id } = args
       const news = await steam.getGameNews(id)
       return news
     },
-    userGames: async (parent, args, context) => {
+    SteamUserGames: async (parent, args, context) => {
       let { uid } = args
       const { username } = args
       if (!uid) {
@@ -42,7 +42,7 @@ module.exports = {
       const games = await steam.getUserOwnedGames(uid)
       return games
     },
-    userRecentGames: async (parent, args, context) => {
+    SteamUserRecentGames: async (parent, args, context) => {
       let { uid } = args
       const { username } = args
       if (!uid) {
@@ -51,7 +51,7 @@ module.exports = {
       const games = await steam.getUserRecentGames(uid)
       return games
     },
-    userLevel: async (parent, args, context) => {
+    SteamUserLevel: async (parent, args, context) => {
       let { uid } = args
       const { username } = args
       if (!uid) {
@@ -60,7 +60,7 @@ module.exports = {
       const lvl = await steam.getUserLevel(uid)
       return lvl
     },
-    userFriends: async (parent, args, context) => {
+    SteamUserFriends: async (parent, args, context) => {
       let { uid } = args
       const { username } = args
       if (!uid) {
