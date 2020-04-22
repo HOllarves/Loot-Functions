@@ -3,6 +3,8 @@ require('dotenv').config()
 const SteamAPI = require('steamapi')
 // Instanciating new class
 const steam = new SteamAPI(process.env.STEAM_KEY)
+// Steam API base URL
+const steamUrl = 'https://steamcommunity.com/id/'
 
 module.exports = {
   Query: {
@@ -10,7 +12,7 @@ module.exports = {
       let { uid } = args
       const { username } = args
       if (!uid) {
-        uid = await steam.resolve(`https://steamcommunity.com/id/${username}`)
+        uid = await steam.resolve(`${steamUrl}${username}`)
       }
       const steamUser = await steam.getUserSummary(uid)
       return steamUser
@@ -37,7 +39,7 @@ module.exports = {
       let { uid } = args
       const { username } = args
       if (!uid) {
-        uid = await steam.resolve(`https://steamcommunity.com/id/${username}`)
+        uid = await steam.resolve(`${steamUrl}${username}`)
       }
       const games = await steam.getUserOwnedGames(uid)
       return games
@@ -46,7 +48,7 @@ module.exports = {
       let { uid } = args
       const { username } = args
       if (!uid) {
-        uid = await steam.resolve(`https://steamcommunity.com/id/${username}`)
+        uid = await steam.resolve(`${steamUrl}${username}`)
       }
       const games = await steam.getUserRecentGames(uid)
       return games
@@ -55,7 +57,7 @@ module.exports = {
       let { uid } = args
       const { username } = args
       if (!uid) {
-        uid = await steam.resolve(`https://steamcommunity.com/id/${username}`)
+        uid = await steam.resolve(`${steamUrl}${username}`)
       }
       const lvl = await steam.getUserLevel(uid)
       return lvl
@@ -64,7 +66,7 @@ module.exports = {
       let { uid } = args
       const { username } = args
       if (!uid) {
-        uid = await steam.resolve(`https://steamcommunity.com/id/${username}`)
+        uid = await steam.resolve(`${steamUrl}${username}`)
       }
       let friends = await steam.getUserFriends(uid)
       const friendIds = friends.map((f) => f.steamID).map((id) => steam.getUserSummary(id))

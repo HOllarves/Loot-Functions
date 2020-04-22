@@ -12,6 +12,7 @@
     "apollo-server-azure-functions": "^2.12.0",
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
+    "eslint-config-airbnb": "^18.1.0",
     "require-graphql-file": "^1.0.1",
     "steamapi": "^2.0.7"
   },
