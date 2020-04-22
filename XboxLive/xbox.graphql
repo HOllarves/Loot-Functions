@@ -1,0 +1,24 @@
+type Query {
+  XboxGame(id: ID!): XboxGame
+  XboxGames: [XboxGame]
+}
+
+type Mutation {
+  authenticate(input: UserAuthInput) : UserAuthObj
+}
+
+type XboxGame {
+  name: String
+}
+
+input UserAuthInput {
+  email: String!
+  password: String!
+}
+
+type UserAuthObj {
+  userXUID: String
+  userHash: String!
+  XSTSToken: String!
+  expiresOn: String!
+}

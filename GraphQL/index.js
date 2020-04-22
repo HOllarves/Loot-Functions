@@ -8,6 +8,7 @@ const gateway = new ApolloGateway({
   serviceList: [
     { name: 'Steam', url: process.env.STEAM_SERVICE_URL },
     { name: 'PSN', url: process.env.PSN_SERVICE_URL },
+    { name: 'Xbox', url: process.env.XBOX_SERVICE_URL },
   ],
 })
 
