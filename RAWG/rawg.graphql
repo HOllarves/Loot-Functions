@@ -1,0 +1,97 @@
+type Query {
+  Game (id:ID!): Game
+  Games(search: String): [Game]
+}
+
+type Game {
+  id: String!
+  slug: String!
+  name: String!
+  released: String
+  tba: Boolean
+  background_image: String
+  rating: Int
+  rating_top: Int
+  ratings: [Ratings]
+  ratings_count: Int
+  reviews_text_count: Int
+  added: Int
+  added_by_status: AddedStatus
+  metacritic: Int
+  playtime: Int
+  suggestions_count: Int
+  reviews_count: Int
+  platforms: Platforms
+  genres: [Genre]
+  stores: [Store]
+  clip: Clip
+}
+
+
+type Clip {
+  clip: String
+  video: String
+  preview: String
+}
+
+type Store {
+  id: Int
+  store: StoreMetadata
+  url_en: String
+  url_ru: String
+}
+
+type StoreMetadata {
+  id: Int
+  name: String
+  slug: String
+  domain: String
+  games_count: Int
+  image_background: String
+}
+
+type Genre {
+  id: Int
+  name: String
+  slug: String
+  games_count: Int
+  image_background: String
+}
+
+type Platforms {
+  platform: Platform
+  released_at: String
+  requirements_en: Requirements
+}
+
+type Requirements {
+  minimum: String
+  recommended: String
+}
+
+type Platform {
+  id: Int
+  name: String!
+  slug: String!
+  image: String
+  year_end: String
+  year_start: String
+  games_count: Int
+  image_background: String
+}
+
+type AddedStatus {
+  yet: Int
+  owned: Int
+  beaten: Int
+  toplay: Int
+  dropped: Int
+  playing: Int
+}
+
+type Ratings {
+  id: Int
+  title: String!
+  count: Int
+  percent: Int
+}

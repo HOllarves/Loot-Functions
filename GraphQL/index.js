@@ -9,6 +9,7 @@ const gateway = new ApolloGateway({
     { name: 'Steam', url: process.env.STEAM_SERVICE_URL },
     { name: 'PSN', url: process.env.PSN_SERVICE_URL },
     { name: 'Xbox', url: process.env.XBOX_SERVICE_URL },
+    { name: 'RAWG', url: process.env.RAWG_SERVICE_URL },
   ],
 })
 

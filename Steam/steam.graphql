@@ -127,7 +127,7 @@ type SteamGameDetail {
   developers: [String]
   publishers: [String]
   price_overview: PriceOverview
-  platforms: Platforms
+  platforms: SteamPlatforms
   categories: [GameCategory]
   genres: [GameGenre]
   screenshots: [GameScreenshot]
@@ -136,7 +136,7 @@ type SteamGameDetail {
   background: String
 }
 
-type Platforms {
+type SteamPlatforms {
   windows: Boolean!
   mac: Boolean!
   linux: Boolean!
