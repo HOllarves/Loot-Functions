@@ -1,6 +1,6 @@
 type Query {
   XboxGame(id: ID!): XboxGame
-  XboxGames: [XboxGame]
+  XboxGames(search: String): [XboxGame]
 }
 
 type Mutation {
@@ -8,7 +8,295 @@ type Mutation {
 }
 
 type XboxGame {
-  name: String
+  LastModifiedDate: String
+  LocalizedProperties: [LocalizedProp]
+  MarketProperties: [MarketProp]
+  ProductASchema: String
+  ProductBSchema: String
+  ProductId: String!
+  Properties: ProductProp
+  AlternateIds: [String]
+  DomainDataVersion: String
+  IngestionSource: String
+  IsMicrosoftProduct: Boolean
+  PreferredSkuId: String
+  ProductType: String
+  ValidationData: ValidationData
+  MerchandizingTags: [String]
+  SandboxId: String
+  ProductFamily: String
+  SchemaVersion: String
+  IsSandboxedProduct: Boolean
+  ProductKind: String
+  DisplaySkuAvailabilities: [XboxSKUAvailability]
+}
+
+type XboxSKUAvailability {
+  Sku: XboxSKU
+  Availabilities:  [XboxSKUAvailabilityProp]
+}
+
+type XboxSKUAvailabilityProp {
+  Actions: [String]
+  AvailabilityASchema: String
+  AvailabilityBSchema: String
+  AvailabilityId: String
+  Conditions: XboxSkuCondition
+  LastModifiedDate: String
+  Markets: [String]
+  OrderManagementData: XboxOrderData
+  SkuId: String
+  DisplayRank: Int
+  RemediationRequired: Boolean
+}
+
+type XboxOrderData {
+  Price: XboxPrice
+}
+
+type XboxPrice {
+  CurrencyCode: String
+  IsPIRequired: Boolean
+  ListPrice: String
+  MSRP: String
+  TaxType: String
+  WholesaleCurrencyCode: String
+  WholesalePrice: String
+}
+
+type XboxSkuCondition {
+  Conditions: XboxClientCondition
+  EndDate: String
+  ResourceSetIds: [String]
+  StartDate: String
+}
+
+type XboxClientCondition {
+  AllowedPlatforms: [XboxAllowedPlatform]
+}
+
+type XboxAllowedPlatform {
+  MaxVersion: Int
+  MinVersion: Int
+  PlatformName: String
+}
+
+type XboxSKU {
+  LastModifiedDate: String
+  LocalizedProperties: SkuLocalizedProp
+  MarketProperties: SkuMarketProp
+  ProductId: String
+  Properties: SkuProp
+  SkuASchema: String
+  SkuBSchema: String
+  SkuId: String
+  SkuType: String
+  RecurrencePolicy: String
+  SubscriptionPolicyId: String
+
+}
+
+type SkuProp {
+  EarlyAdopterEnrollmentUrl: String
+  FulfillmentData: String
+  FulfillmentType: String
+  FulfillmentPluginId: String
+  HasThirdPartyIAPs: Boolean
+  LastUpdateDate: String
+  HardwareProperties: String
+  HardwareRequirements: [String]
+  HardwareWarningList: [String]
+  InstallationTerms: String
+  VersionString: String
+  SkuDisplayGroupIds: String
+  XboxXPA: Boolean
+  BundledSkus: [SKUBundle]
+  IsRepurchasable: Boolean
+  SkuDisplayRank: Int
+  DisplayPhysicalStoreInventory: String
+  IsTrial: Boolean
+  IsPreOrder: Boolean
+  IsBundle: Boolean
+
+}
+
+type SKUBundle {
+  BigId: String
+  DisplayRank: Int
+  IsPrimary: Boolean
+  FulfillmentType: String
+}
+
+type SkuMarketProp {
+  FirstAvailableDate: String
+  SupportedLanguages: [String]
+  PackageIds: String
+  PIFilter: String
+  Markets: [String]
+}
+
+type SkuLocalizedProp {
+  Contributors: [String]
+  Features: [String]
+  MinimumNotes: String
+  RecommendedNotes: String
+  ReleaseNotes: String
+  DisplayPlatformProperties: String
+  SkuDescription: String
+  SkuTitle: String
+  SkuButtonTitle: String
+  DeliveryDateOverlay: String
+  Language: String
+  Markets: String
+}
+
+type ValidationData {
+  PassedValidation: Boolean
+  RevisionId: String
+  ValidationResultUri: String
+}
+
+type ProductProp {
+  Attributes: [ProductAttribute]
+  CanInstallToSDCard: Boolean
+  Category: String
+  Categories: String
+  Subcategory: String
+  IsAccessible: Boolean
+  IsDemo: Boolean
+  IsLineOfBusinessApp: Boolean
+  IsPublishedToLegacyWindowsPhoneStore: Boolean
+  IsPublishedToLegacyWindowsStore: Boolean
+  PackageFamilyName: String
+  PackageIdentityName: String
+  PublisherCertificateName: String
+  PublisherId: String
+  XboxLiveTier: String
+  XboxXPA: String
+  XboxCrossGenSetId: String
+  XboxConsoleGenOptimized: Boolean
+  XboxConsoleGenCompatible: Boolean
+  OwnershipType: String
+  PdpBackgroundColor: String
+  HasAddOns: Boolean
+  RevisionId: String
+  ProductGroupId: String
+  ProductGroupName: String
+
+}
+
+type ProductAttribute {
+  Name: String
+  Minimum: Int
+  Maximum: Int
+  ApplicablePlatforms: String
+  Group: String
+}
+
+type MarketProp {
+  OriginalReleaseDate: String
+  MinimumUserAge: Int
+  ContentRatings: [XboxRating]
+  RelatedProducts: [XboxRelatedProduct]
+  UsageData: [XboxUsage] 
+  BundleConfig: String
+  Markets: [String]
+}
+
+type XboxUsage {
+  AggregateTimeSpan: String
+  AverageRating: Float
+  PlayCount: Int
+  RatingCount: Int
+  RentalCount: String
+  TrialCount: String
+  PurchaseCount: String
+}
+
+type XboxRelatedProduct {
+  RelatedProductId: String
+  RelationshipType: String
+}
+
+type XboxRating {
+  RatingSystem: String
+  RatingId: String
+  RatingDescriptors: [String]
+  RatingDisclaimers: [String]
+
+}
+
+type LocalizedProp {
+  DeveloperName: String
+  PublisherName: String
+  PublisherWebsiteUri: String
+  SupportUri: String
+  Franchises: [String]
+  Images: [XboxImage]
+  Videos: [XboxVideo]
+  ProductDescription: String
+  ProductTitle: String
+  ShortTitle: String
+  SortTitle: String
+  FriendlyTitle: String
+  ShortDescription: String
+  VoiceTitle: String
+  RenderGroupDetails: String
+  ProductDisplayRanks: [String]
+  InteractiveModelConfig: String
+  Interactive3DEnabled: Boolean
+  Language: String
+  Markets: [String]
+
+}
+
+type XboxImage {
+  FiledId: String
+  EISListingIdentifier: ListingIdentifier
+  BackgroundColor: String
+  Caption: String
+  FileSizeInBytes: Int
+  ForegroundColor: String
+  Height: Int
+  ImagePositionInfo: String
+  ImagePurpose: String
+  UnscaledImageSHA256Hash: String
+  Uri: String
+  Width: Int
+}
+
+type XboxVideo {
+  Uri: String
+  VideoPurpose: String
+  Height: Int
+  Width: Int
+  AudioEncoding: String
+  VideoEncoding: String
+  VideoPositionInfo: String
+  Caption: String
+  FileSizeInBytes: Int
+  PreviewImage: XboxMediPreview
+  SortOrder: Int
+}
+
+type XboxMediPreview {
+  FileId: String
+  EISListingIdentifier: ListingIdentifier
+  BackgroundColor: String
+  Caption: String
+  FileSizeInBytes: String
+  ForegroundColor: String
+  Height: Int
+  Width: Int
+  ImagePositionInfo: String
+  ImagePurpose: String
+  UnscaledImageSHA256Hash: String
+  Uri: String
+}
+
+type ListingIdentifier {
+  ListingId: String
+  AssetId: String
 }
 
 input UserAuthInput {

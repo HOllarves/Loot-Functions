@@ -12,9 +12,12 @@ const Auth = () => {
    * xbox live credentials
    * @returns {Object} User Auth Object
    */
-  const authenticate = async () => {
+  const authenticate = async (email, password) => {
     try {
-      return xboxAuth.authenticate(adminEmail, adminPass)
+      if (email && password)
+        return xboxAuth.authenticate(email, password)
+      else
+        return xboxAuth.authenticate(adminEmail, adminPass)
     } catch (e) {
       return { success: false, message: 'Unable to authenticate user', error: e }
     }

@@ -1,57 +1,66 @@
 const XboxLiveAPI = () => {
 
   const axios = require('axios')
-  // const xboxInventoryUrl = 'https://inventory.xboxlive.com'
-  const xboxMarkeplaceUrl = 'https://eds.xboxlive.com'
 
+  const xboxApiUrl = 'https://xapi.us/v2'
 
-  const USER_AGENT = [
-    'Mozilla/5.0 (XboxReplay; XboxLiveAPI/3.0)',
-    'AppleWebKit/537.36 (KHTML, like Gecko)',
-    'Chrome/71.0.3578.98 Safari/537.36',
-  ].join(' ')
+  const xboxApiKey = process.env.XBOX_API_KEY
 
-  const setHeaders = (userHash, XSTSToken) => {
-    return {
-      'x-xbl-contract-version': 3.2,
-      'x-xbl-client-version': '1.0',
-      'x-xbl-parent-ig': 'randomText',
-      'x-xbl-device-type': 'NodeJS',
-      Authorization: `XBL3.0 x=${userHash};${XSTSToken}`,
-      Accept: 'application/json',
-      'Accept-encoding': 'gzip',
-      'Accept-Language': 'en-US',
-      'User-Agent': USER_AGENT,
+  const headers = { 'X-AUTH': xboxApiKey }
 
-    }
-  }
-
-  const getGame = async (id, { userHash, XSTSToken }) => {
+  /**
+   * Returns a specific game
+   * from xboxapi.com
+   * @param {String} id - Game ID 
+   */
+  const getGame = async (id) => {
     console.log("####### GETTING GAME #######")
     try {
-      const headers = setHeaders(userHash, XSTSToken)
-      const response = await axios.default.get(`${xboxMarkeplaceUrl}/inventory/${id}`, { headers })
-      console.log({ response })
-      return response
+      const response = await axios.default.get(`${xboxApiUrl}/marketplace/show/${id}`, { headers })
+      if (response && response.data)
+        return response.data
+      else
+        throw new Error(`Unable to obtain game with ID ${id}`)
     } catch (e) {
-      console.log("ERROR", { e })
+      return { error: "Internal Server Error", message: "Unable to reach xboxapi.com services" }
     }
   }
 
-  const getGames = async ({ userHash, XSTSToken }) => {
+  /**
+   * Returns the latests games
+   * in the xbox live marketplace
+   */
+  const getLatestGames = async () => {
+    console.log("####### GETTING LATEST GAMES #######")
+    try {
+      const response = await axios.default.get(`${xboxApiUrl}/marketplace/latest-games`, { headers })
+      if (response && response.data)
+        return response.data
+      else
+        throw new Error('Unable to obtain latest games')
+    } catch (e) {
+      return { error: "Internal Server Error", message: "Unable to reach xboxapi.com services" }
+    }
+  }
+
+  /**
+   * Returns games based on a search query
+   * @param {String} search 
+   */
+  const getGames = async (search) => {
     console.log("####### GETTING GAMES #######")
     try {
-      const headers = setHeaders(userHash, XSTSToken)
-      const response = await axios.default.get(`${xboxMarkeplaceUrl}/media/all/browse`, { headers })
-      console.log({ response })
-      return response
+      const response = await axios.default.get(`${xboxApiUrl}/marketplace/search/${search}`, { headers })
+      if (response && response.data)
+        return response.data
+      else
+        throw new Error('Unable to obtain games')
     } catch (e) {
-      console.log("ERROR", { e })
-      return false
+      return { error: "Internal Server Error", message: "Unable to reach xboxapi.com services" }
     }
   }
 
-  return { getGame, getGames }
+  return { getGame, getGames, getLatestGames }
 }
 
 module.exports = XboxLiveAPI()

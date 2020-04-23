@@ -4,15 +4,17 @@ type Query {
 }
 
 type Game {
-  id: String!
+  id: Int!
   slug: String!
   name: String!
+  platforms: [RawPlatform]
+  stores: [RawStore]
   released: String
   tba: Boolean
   background_image: String
-  rating: Int
+  rating: Float
   rating_top: Int
-  ratings: [Ratings]
+  ratings: [RawRating]
   ratings_count: Int
   reviews_text_count: Int
   added: Int
@@ -20,13 +22,20 @@ type Game {
   metacritic: Int
   playtime: Int
   suggestions_count: Int
-  reviews_count: Int
-  platforms: Platforms
-  genres: [Genre]
-  stores: [Store]
+  score: String
   clip: Clip
+  reviews_count: Int
+  saturated_color: String
+  dominant_color: String
+  short_screenshots: [RawShortScreenshot]
+  parent_platform:  [RawPlatform]
+  genres: [RawGenre]
 }
 
+type RawShortScreenshot {
+  id: Int
+  image: String
+}
 
 type Clip {
   clip: String
@@ -34,7 +43,7 @@ type Clip {
   preview: String
 }
 
-type Store {
+type RawStore {
   id: Int
   store: StoreMetadata
   url_en: String
@@ -50,18 +59,23 @@ type StoreMetadata {
   image_background: String
 }
 
-type Genre {
+type RawGenre {
   id: Int
   name: String
   slug: String
-  games_count: Int
-  image_background: String
 }
 
-type Platforms {
+
+type RawPlatform {
   platform: Platform
   released_at: String
-  requirements_en: Requirements
+  requirements_en: RawRequirements
+  requirements_ru: RawRequirements
+}
+
+type RawRequirements {
+  minimum: String
+  recommended: String
 }
 
 type Requirements {
@@ -89,9 +103,9 @@ type AddedStatus {
   playing: Int
 }
 
-type Ratings {
+type RawRating {
   id: Int
   title: String!
   count: Int
-  percent: Int
+  percent: Float
 }
