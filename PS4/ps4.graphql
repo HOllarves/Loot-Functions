@@ -1,8 +1,10 @@
-type Query {
+extend type Query {
   PSNGame(id: ID! region: String): PSNGame
 }
 
-type PSNGame {
+type PSNGame @key(fields: "PSN_ID") {
+  id: ID!
+  PSN_ID: ID!
   age_limit: Int
   bucket: String
   container_type: String
@@ -31,6 +33,11 @@ type PSNGame {
   title_name: String
   top_category: String
   total_results: Int
+}
+
+extend type Game @key(fields: "PSN_ID") {
+  PSN_ID: ID @external
+  PSNMarket: PSNGame
 }
 
 type StarRating {

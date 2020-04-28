@@ -25,7 +25,7 @@ module.exports = {
       const featured = await steam.getFeaturedGames()
       return featured
     },
-    SteamGameDetail: async (parent, args, context) => {
+    SteamGame: async (parent, args, context) => {
       const { id } = args
       const game = await steam.getGameDetails(id)
       return game
@@ -73,6 +73,18 @@ module.exports = {
       const friendNames = await Promise.all(friendIds)
       friends = friends.map((f) => { return { ...f, username: friendNames.find((x) => x.steamID === f.steamID).nickname } })
       return friends
+    },
+  },
+  Game: {
+    SteamMarket: (steamGame) => {
+      return steamGame
+    },
+    // eslint-disable-next-line no-underscore-dangle
+    __resolveReference(game) {
+      if (game.STEAM_ID) {
+        return steam.getGameDetails(game.STEAM_ID)
+      }
+      return {}
     },
   },
 }

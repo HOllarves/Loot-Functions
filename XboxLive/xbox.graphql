@@ -1,4 +1,4 @@
-type Query {
+extend type Query {
   XboxGame(id: ID!): XboxGame
   XboxGames(search: String): [XboxGame]
 }
@@ -29,6 +29,11 @@ type XboxGame {
   IsSandboxedProduct: Boolean
   ProductKind: String
   DisplaySkuAvailabilities: [XboxSKUAvailability]
+}
+
+extend type Game @key(fields:"XBOX_ID") {
+  XBOX_ID: ID @external
+  XboxMarket: XboxGame
 }
 
 type XboxSKUAvailability {

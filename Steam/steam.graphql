@@ -1,11 +1,11 @@
 
-type Query {
+extend type Query {
   SteamUser(uid: ID username: String): SteamUser
   SteamUserRecentGames(uid: ID username: String): [RecentGames]
   SteamUserLevel(uid: ID username: String): Int
   SteamFeaturedCategories: [FeaturedCategory]
   SteamFeaturedGames: FeaturedGames
-  SteamGameDetail(id: ID!): SteamGameDetail
+  SteamGame(id: ID!): SteamGame
   SteamGameNews(id: ID!): [GameNews]
   SteamUserGames(id: ID username: String): [UserGame]
   SteamUserFriends(uid: ID username: String): [SteamFriend]
@@ -107,7 +107,7 @@ type FeaturedGames {
   featured_linux: [FeaturedGame]
 }
 
-type SteamGameDetail {
+type SteamGame {
   type: String
   name: String!
   steam_appid: Int!
@@ -134,6 +134,11 @@ type SteamGameDetail {
   release_date: GameReleaseDate
   recommendations: GameRecomendations
   background: String
+}
+
+extend type Game @key(fields: "STEAM_ID") {
+  STEAM_ID: ID @external
+  SteamMarket: SteamGame
 }
 
 type SteamPlatforms {

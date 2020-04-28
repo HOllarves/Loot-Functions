@@ -1,10 +1,10 @@
-type Query {
+extend type Query {
   Game (id:ID!): Game
   Games(search: String): [Game]
 }
 
-type Game {
-  id: Int!
+type Game @key(fields: "id") @key(fields: "PSN_ID") @key(fields: "XBOX_ID") @key(fields: "STEAM_ID") {
+  id: ID!
   slug: String!
   name: String!
   platforms: [RawPlatform]
@@ -30,6 +30,9 @@ type Game {
   short_screenshots: [RawShortScreenshot]
   parent_platform:  [RawPlatform]
   genres: [RawGenre]
+  PSN_ID: ID
+  XBOX_ID: ID
+  STEAM_ID: ID
 }
 
 type RawShortScreenshot {
