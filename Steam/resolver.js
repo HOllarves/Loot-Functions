@@ -79,12 +79,26 @@ module.exports = {
     SteamMarket: (steamGame) => {
       return steamGame
     },
-    // eslint-disable-next-line no-underscore-dangle
-    __resolveReference(game) {
-      if (game.STEAM_ID) {
-        return steam.getGameDetails(game.STEAM_ID)
+    SteamPrice: (steamGame) => {
+      if (steamGame) {
+        return steamGame.price_overview.final
       }
-      return {}
+      return null
+    },
+    // eslint-disable-next-line no-underscore-dangle
+    async __resolveReference(game) {
+      if (game.STEAM_ID) {
+        try {
+          const steamGame = await steam.getGameDetails(game.STEAM_ID)
+          if (steamGame) {
+            return steamGame
+          }
+          return null
+        } catch (e) {
+          return null
+        }
+      }
+      return null
     },
   },
 }

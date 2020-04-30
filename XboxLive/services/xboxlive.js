@@ -14,15 +14,14 @@ const XboxLiveAPI = () => {
    * @param {String} id - Game ID 
    */
   const getGame = async (id) => {
-    console.log("####### GETTING GAME #######")
     try {
       const response = await axios.default.get(`${xboxApiUrl}/marketplace/show/${id}`, { headers })
-      if (response && response.data)
+      if (response && response.data) {
         return response.data
-      else
-        throw new Error(`Unable to obtain game with ID ${id}`)
+      }
+      throw new Error(`Unable to obtain game with ID ${id}`)
     } catch (e) {
-      return { error: "Internal Server Error", message: "Unable to reach xboxapi.com services" }
+      return { error: 'Internal Server Error', message: 'Unable to reach xboxapi.com services' }
     }
   }
 
@@ -31,15 +30,14 @@ const XboxLiveAPI = () => {
    * in the xbox live marketplace
    */
   const getLatestGames = async () => {
-    console.log("####### GETTING LATEST GAMES #######")
     try {
       const response = await axios.default.get(`${xboxApiUrl}/marketplace/latest-games`, { headers })
-      if (response && response.data)
+      if (response && response.data) {
         return response.data
-      else
-        throw new Error('Unable to obtain latest games')
+      }
+      throw new Error('Unable to obtain latest games')
     } catch (e) {
-      return { error: "Internal Server Error", message: "Unable to reach xboxapi.com services" }
+      return { error: 'Internal Server Error', message: 'Unable to reach xboxapi.com services' }
     }
   }
 
@@ -48,15 +46,14 @@ const XboxLiveAPI = () => {
    * @param {String} search 
    */
   const getGames = async (search) => {
-    console.log("####### GETTING GAMES #######")
     try {
       const response = await axios.default.get(`${xboxApiUrl}/marketplace/search/${search}`, { headers })
-      if (response && response.data)
+      if (response && response.data) {
         return response.data
-      else
-        throw new Error('Unable to obtain games')
+      }
+      throw new Error('Unable to obtain games')
     } catch (e) {
-      return { error: "Internal Server Error", message: "Unable to reach xboxapi.com services" }
+      return { error: 'Internal Server Error', message: 'Unable to reach xboxapi.com services' }
     }
   }
 

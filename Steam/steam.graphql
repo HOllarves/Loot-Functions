@@ -138,6 +138,7 @@ type SteamGame {
 
 extend type Game @key(fields: "STEAM_ID") {
   STEAM_ID: ID @external
+  SteamPrice: Int
   SteamMarket: SteamGame
 }
 

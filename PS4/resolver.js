@@ -25,12 +25,26 @@ module.exports = {
       gameMarketData.PSN_ID = psnGame.id
       return gameMarketData
     },
+    PSNPrice: async (psnGame) => {
+      if (psnGame && psnGame.default_sku && psnGame.default_sku.display_price) {
+        return (parseFloat(psnGame.default_sku.display_price.substring(1)) * 100).toFixed(0)
+      }
+      return null
+    },
     // eslint-disable-next-line no-underscore-dangle
     async __resolveReference(game) {
       if (game.PSN_ID) {
-        return getGame(game.PSN_ID)
+        try {
+          const psnGame = await getGame(game.PSN_ID)
+          if (psnGame) {
+            return psnGame
+          }
+          return null
+        } catch (e) {
+          return null
+        }
       }
-      return {}
+      return null
     },
   },
 }
