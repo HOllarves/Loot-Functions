@@ -34,6 +34,9 @@ module.exports = {
               }
             }
           }
+          if (r.store && r.store.slug === 'nintendo') {
+            game.NINTENDO_ID = game.name
+          }
         })
       }
       return game

@@ -3,7 +3,7 @@ extend type Query {
   Games(search: String): [Game]
 }
 
-type Game @key(fields: "id") @key(fields: "PSN_ID") @key(fields: "XBOX_ID") @key(fields: "STEAM_ID") {
+type Game @key(fields: "id") @key(fields: "NINTENDO_ID") @key(fields: "PSN_ID") @key(fields: "XBOX_ID") @key(fields: "STEAM_ID") {
   id: ID!
   slug: String!
   name: String!
@@ -33,6 +33,7 @@ type Game @key(fields: "id") @key(fields: "PSN_ID") @key(fields: "XBOX_ID") @key
   PSN_ID: ID
   XBOX_ID: ID
   STEAM_ID: ID
+  NINTENDO_ID: ID
 }
 
 type RawShortScreenshot {
@@ -49,6 +50,7 @@ type Clip {
 type RawStore {
   id: Int
   store: StoreMetadata
+  url: String
   url_en: String
   url_ru: String
 }

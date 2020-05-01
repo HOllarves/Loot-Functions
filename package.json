@@ -14,6 +14,10 @@
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "eslint-config-airbnb": "^18.1.0",
+    "install": "^0.13.0",
+    "nintendo-switch-eshop": "^3.0.1",
+    "npm": "^6.14.4",
+    "querystring": "^0.2.0",
     "require-graphql-file": "^1.0.1",
     "steamapi": "^2.0.7"
   },
