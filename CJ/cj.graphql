@@ -1,0 +1,22 @@
+type Query {
+  products: [CJProduct]
+  product(name: String): CJProduct
+}
+
+type CJProduct {
+  ad_id: String
+  advertiser_id: String
+  advertiser_name: String
+  advertiser_category: String
+  buy_url: String
+  catalog_id: String
+  currency: String
+  description: String
+  image_url: String
+  in_stock: String
+  name: String
+  slug: String
+  price: String
+  sale_price: String
+  sku: String
+}

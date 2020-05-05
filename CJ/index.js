@@ -3,12 +3,12 @@ const requireGraphSchema = require('require-graphql-file')
 const { buildFederatedSchema } = require('@apollo/federation')
 
 // Starting Apollo Server
-const typeDefs = requireGraphSchema('./nintendo')
+const typeDefs = requireGraphSchema('./cj')
 const resolvers = require('./resolver')
 
 const server = new ApolloServer({
   schema: buildFederatedSchema([{ typeDefs: gql(typeDefs), resolvers }]),
-  playground: false,
+  playground: true,
 })
 
 module.exports = server.createHandler()

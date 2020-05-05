@@ -26,6 +26,7 @@ module.exports = {
             if (r.url) {
               const appUrl = r.url.split('/app/')
               if (appUrl && appUrl.length > 1) {
+                // eslint-disable-next-line prefer-destructuring
                 game.STEAM_ID = appUrl[1].split('/')[0]
               }
               const subUrl = r.url.split('/sub/')
