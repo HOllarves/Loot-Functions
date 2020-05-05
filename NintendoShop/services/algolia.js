@@ -30,9 +30,9 @@ const AlgoliaSearch = () => {
       })
       const { data: { results } } = response
       // eslint-disable-next-line consistent-return
-      return results[0].hits[0]
+      return results[0].hits.find((g) => g.nsuid)
     } catch (e) {
-      console.error(e)
+      throw new Error(e)
     }
   }
 

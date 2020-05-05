@@ -37,7 +37,8 @@ type PSNGame @key(fields: "PSN_ID") {
 
 extend type Game @key(fields: "PSN_ID") {
   PSN_ID: ID @external
-  PSNPrice: Int
+  USPSNPrice: Int
+  EUPSNPrice: Int
   PSNMarket: PSNGame
 }
 

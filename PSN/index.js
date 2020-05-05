@@ -3,7 +3,7 @@ const requireGraphSchema = require('require-graphql-file')
 const { buildFederatedSchema } = require('@apollo/federation')
 
 // Starting Apollo Server
-const typeDefs = requireGraphSchema('./ps4')
+const typeDefs = requireGraphSchema('./psn')
 const resolvers = require('./resolver')
 
 const server = new ApolloServer({

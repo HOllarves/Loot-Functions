@@ -13,8 +13,10 @@ type NintendoGame {
 
 extend type Game @key(fields: "NINTENDO_ID") {
   NINTENDO_ID: ID @external
-  NintendoUSPrice: Int
-  NintendoMarket: USNintendoGame
+  USNintendoPrice: Int
+  EUNintendoPrice: Int
+  USNintendoMarket: USNintendoGame
+  EUNintendoMarket: EUNintendoGame
 }
 
 type USNintendoGame {
