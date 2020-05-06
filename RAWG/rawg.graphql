@@ -3,7 +3,10 @@ extend type Query {
   Games(search: String): [Game]
 }
 
-type Game @key(fields: "id") @key(fields: "NINTENDO_ID") @key(fields: "PSN_ID") @key(fields: "XBOX_ID") @key(fields: "STEAM_ID") {
+type Game @key(fields: "id")
+ @key(fields: "NINTENDO_ID") @key(fields: "PSN_ID") 
+ @key(fields: "XBOX_ID") @key(fields: "STEAM_ID")
+ @key(fields: "slug") {
   id: ID!
   slug: String!
   name: String!

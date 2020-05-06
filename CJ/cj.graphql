@@ -1,5 +1,5 @@
-type Query {
-  products: [CJProduct]
+extend type Query {
+  products(name: String): [CJProduct]
   product(name: String): CJProduct
 }
 
@@ -19,4 +19,9 @@ type CJProduct {
   price: String
   sale_price: String
   sku: String
+}
+
+extend type Game @key(fields: "slug") {
+  slug: String! @external
+  products: [CJProduct]
 }
