@@ -17,7 +17,6 @@ function slugify(text) {
 const CJProducts = () => {
   const baseUrl = 'https://product-search.api.cj.com/v2/product-search'
   const search = async (name, currency = 'USD') => {
-
     const advertiserIds = process.env.CJ_ADVERTISER_IDS.split(',').filter((x) => x)
     const promises = []
     const results = []
@@ -54,7 +53,7 @@ const CJProducts = () => {
           buy_url: x['buy-url'] ? x['buy-url']._text : null,
           catalog_id: x['catalog-id'] ? x['catalog-id']._text : null,
           currency: x.currency ? x.currency._text : null,
-          description: r.description ? r.description._text : null,
+          description: x.description ? x.description._text : null,
           image_url: x['image-url'] ? x['image-url']._text : null,
           in_stock: x['in-stock'] ? x['in-stock']._text : null,
           name: x.name ? x.name._text : null,

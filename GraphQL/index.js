@@ -17,4 +17,9 @@ const gateway = new ApolloGateway({
 
 const server = new ApolloServer({ gateway, subscriptions: false, playground: true })
 
-module.exports = server.createHandler()
+module.exports = server.createHandler({
+  cors: {
+    origin: '*',
+    credentials: true,
+  },
+})

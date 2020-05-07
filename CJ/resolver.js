@@ -1,11 +1,11 @@
-const { search } = require('./services/cj')
+const { search } = require('./services/mongo')
 
 module.exports = {
   Query: {
     product: async (parent, args) => {
       const { name } = args
       const response = await search(name)
-      return response.find((r) => r.slug === name)
+      return response
     },
     products: async (parent, args) => {
       const { name } = args

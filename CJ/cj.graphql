@@ -16,8 +16,8 @@ type CJProduct {
   in_stock: String
   name: String
   slug: String
-  price: String
-  sale_price: String
+  price: Int
+  sale_price: Int
   sku: String
 }
 

@@ -1,7 +1,7 @@
 extend type Query {
   USNintendoGames: [USNintendoGame]
   EUNintendoGames: [EUNintendoGame]
-  NintendoGame(title: String!): NintendoGame
+  NintendoGame(region: String title: String!): NintendoGame
 }
 
 union rawData = USNintendoGame | EUNintendoGame
@@ -11,8 +11,9 @@ type NintendoGame {
   rawData: rawData
 }
 
-extend type Game @key(fields: "NINTENDO_ID") {
+extend type Game @key(fields: "slug") @key(fields: "NINTENDO_ID") {
   NINTENDO_ID: ID @external
+  slug: String! @external
   USNintendoPrice: Int
   EUNintendoPrice: Int
   USNintendoMarket: USNintendoGame
@@ -44,7 +45,6 @@ type USNintendoGame {
   publishers: [String]
   releaseDateMask: String
   salePrice: String
-  slug: String
   title: String
   type: String
   url: String

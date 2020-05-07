@@ -1,73 +1,50 @@
-const eshop = require('nintendo-switch-eshop')
-const { getGame } = require('./services/algolia')
-const { all, saveData, search } = require('./services/db')
+/* eslint-disable no-underscore-dangle */
+const { search, all } = require('./services/mongo')
 
-const getNintendoGame = async (title) => {
-  const game = await getGame(title)
-  if (!game) return {}
-  const { msrp: price = 0 } = game
-  return {
-    price: parseInt((price * 100).toFixed(0), 10),
-    rawData: game,
+const getNintendoGame = async (region = 'US', title) => {
+  const game = await search(region, title)
+  if (game) {
+    return {
+      price: game.price,
+      rawData: game,
+    }
   }
+  return {}
 }
-
 module.exports = {
   Query: {
-    USNintendoGames: async () => {
-      const data = await all('US')
-      if (data.length === 0) {
-        const newData = await eshop.getGamesAmerica()
-        await saveData('US', newData)
-        return newData
-      }
-      return data
-    },
-    EUNintendoGames: async () => {
-      const data = await all('EU')
-      if (data.length === 0) {
-        const newData = await eshop.getGamesEurope()
-        await saveData('EU', newData)
-        return newData
-      }
-      return data
-    },
-    NintendoGame: async (parent, args) => {
-      const { title } = args
-      return getNintendoGame(title)
-    },
+    USNintendoGames: async () => all('US'),
+    EUNintendoGames: async () => all('EU'),
+    NintendoGame: async (parent, args) => getNintendoGame(args.region, args.title),
   },
   Game: {
+    /**
+     * @param {Object} game
+     * @param {String} game.slug
+     * @returns {Object}
+     */
+    __resolveReference(game) {
+      const { slug, NINTENDO_ID } = game
+      if (slug && NINTENDO_ID) { return { slug, NINTENDO_ID } }
+      return null
+    },
     USNintendoPrice: async (game) => {
-      const { NINTENDO_ID } = game
-      const usGame = search('US', NINTENDO_ID)
+      const { slug } = game
+      const usGame = search('US', slug)
       if (usGame) {
-        return parseInt((usGame.msrp * 100).toFixed(0), 10)
+        return usGame.price
       }
       return null
     },
     EUNintendoPrice: async (game) => {
-      const { NINTENDO_ID } = game
-      const euGame = search('EU', NINTENDO_ID)
+      const { slug } = game
+      const euGame = search('EU', slug)
       if (euGame) {
-        return parseInt((euGame.price_regular_f * 100).toFixed(0), 10)
+        return euGame.price
       }
-    },
-    USNintendoMarket: async (game) => {
-      const { NINTENDO_ID } = game
-      const allUSGames = search('US', NINTENDO_ID)
-      return allUSGames
-    },
-    EUNintendoMarket: async (game) => {
-      const { NINTENDO_ID } = game
-      const allUSGames = search('EU', NINTENDO_ID)
-      return allUSGames
-    },
-    // eslint-disable-next-line no-underscore-dangle
-    async __resolveReference(game) {
-      const { NINTENDO_ID } = game
-      if (NINTENDO_ID) { return { NINTENDO_ID } }
       return null
     },
+    USNintendoMarket: async (game) => search('US', game.slug),
+    EUNintendoMarket: async (game) => search('EU', game.slug),
   },
 }
