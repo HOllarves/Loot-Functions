@@ -1,5 +1,4 @@
 const XboxLiveAPI = () => {
-
   const axios = require('axios')
 
   const xboxApiUrl = 'https://xapi.us/v2'
@@ -11,7 +10,7 @@ const XboxLiveAPI = () => {
   /**
    * Returns a specific game
    * from xboxapi.com
-   * @param {String} id - Game ID 
+   * @param {String} id - Game ID
    */
   const getGame = async (id) => {
     try {
@@ -43,7 +42,7 @@ const XboxLiveAPI = () => {
 
   /**
    * Returns games based on a search query
-   * @param {String} search 
+   * @param {String} search
    */
   const getGames = async (search) => {
     try {

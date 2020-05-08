@@ -1,4 +1,4 @@
-const { search } = require('./services/mongo')
+const { search, searchByPartner } = require('./services/mongo')
 
 module.exports = {
   Query: {
@@ -7,11 +7,7 @@ module.exports = {
       const response = await search(name)
       return response
     },
-    products: async (parent, args) => {
-      const { name } = args
-      const response = await search(name)
-      return response
-    },
+    products: async () => searchByPartner(),
   },
   Game: {
     products: (games) => games,
@@ -20,7 +16,7 @@ module.exports = {
       const { slug } = game
       if (slug) {
         const response = await search(slug)
-        return response || null
+        return response
       }
       return null
     },
