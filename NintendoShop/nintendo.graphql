@@ -11,8 +11,7 @@ type NintendoGame {
   rawData: rawData
 }
 
-extend type Game @key(fields: "slug") @key(fields: "NINTENDO_ID") {
-  NINTENDO_ID: ID @external
+extend type Game @key(fields: "slug") {
   slug: String! @external
   USNintendoPrice: Int
   EUNintendoPrice: Int

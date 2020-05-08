@@ -25,12 +25,12 @@ module.exports = {
      */
     __resolveReference(game) {
       const { slug, NINTENDO_ID } = game
-      if (slug && NINTENDO_ID) { return { slug, NINTENDO_ID } }
+      if (slug) { return { slug, NINTENDO_ID } }
       return null
     },
     USNintendoPrice: async (game) => {
       const { slug } = game
-      const usGame = search('US', slug)
+      const usGame = await search('US', slug)
       if (usGame) {
         return usGame.price
       }
@@ -38,7 +38,7 @@ module.exports = {
     },
     EUNintendoPrice: async (game) => {
       const { slug } = game
-      const euGame = search('EU', slug)
+      const euGame = await search('EU', slug)
       if (euGame) {
         return euGame.price
       }
