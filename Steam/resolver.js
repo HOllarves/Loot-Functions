@@ -24,7 +24,7 @@ module.exports = {
       return null
     },
     EUSteamPrice: async (steamGame) => {
-      if (steamGame) {
+      if (steamGame && steamGame.price_overview) {
         return steamGame.price_overview.final
       }
       return null

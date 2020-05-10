@@ -32,7 +32,7 @@ const CJProducts = () => {
             'advertiser-ids': a,
             keywords: name,
             currency,
-            'records-per-page': 10,
+            'records-per-page': 5,
           },
         }),
       )

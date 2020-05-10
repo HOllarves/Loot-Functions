@@ -9,7 +9,10 @@ const SteamPricing = () => {
       const response = await axios.default.get(steamMarketUrl, { params: { appids: appId, cc: 'us' } })
       if (!response.data) { throw new Error('No app was found') }
       const game = response.data[appId]
-      return game.data.price_overview.final
+      if (game.data && game.data.price_overview) {
+        return game.data.price_overview.final
+      }
+      return null
     } catch (e) {
       return { error: e }
     }

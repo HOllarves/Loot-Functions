@@ -31,8 +31,10 @@ type Game @key(fields: "id")
   saturated_color: String
   dominant_color: String
   short_screenshots: [RawShortScreenshot]
-  parent_platform:  [RawPlatform]
+  parent_platform: [RawPlatform]
   genres: [RawGenre]
+  screenshots: [RawScreenshot]
+  trailers: [RawTrailer]
   PSN_ID: ID
   XBOX_ID: ID
   STEAM_ID: ID
@@ -42,6 +44,26 @@ type Game @key(fields: "id")
 type RawShortScreenshot {
   id: Int
   image: String
+}
+
+type RawTrailer {
+  id: Int
+  name: String
+  preview: String
+  data: TrailerData
+}
+
+type TrailerData {
+  _480: String
+  max: String
+}
+
+type RawScreenshot {
+  id: Int
+  image: String
+  width: Int
+  height: Int
+  is_deleted: Boolean
 }
 
 type Clip {

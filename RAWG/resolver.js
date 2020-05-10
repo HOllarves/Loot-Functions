@@ -1,9 +1,4 @@
-const RawG = require('./services/rawg')
-
-const getGame = async (id) => {
-  const response = await RawG.getGame(id)
-  return response.data
-}
+const { getGame, getGames } = require('./services/rawg')
 
 module.exports = {
   Query: {
@@ -44,8 +39,8 @@ module.exports = {
     },
     Games: async (parent, args) => {
       const { search } = args
-      const response = await RawG.getGames(search)
-      return response.data.results
+      const response = await getGames(search)
+      return response.results
     },
   },
 }
