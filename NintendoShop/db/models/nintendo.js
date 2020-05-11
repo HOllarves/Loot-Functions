@@ -1,9 +1,7 @@
 const mongoose = require('mongoose')
 
 const typeString = { type: String }
-const typeIndex = {
-  type: String, index: true, required: true, text: true,
-}
+const typeIndex = { type: String, index: true, required: true, text: true }
 const typeNum = { type: Number }
 const typeBool = { type: Boolean }
 
