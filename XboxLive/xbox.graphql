@@ -33,7 +33,8 @@ type XboxGame {
 
 extend type Game @key(fields:"XBOX_ID") {
   XBOX_ID: ID @external
-  XboxPrice: Int
+  USXboxPrice: Int
+  EUXboxPrice: Int
   XboxMarket: XboxGame
 }
 

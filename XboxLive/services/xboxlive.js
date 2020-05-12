@@ -5,16 +5,33 @@ const XboxLiveAPI = () => {
 
   const xboxApiKey = process.env.XBOX_API_KEY
 
-  const headers = { 'X-AUTH': xboxApiKey }
+  const headers = { 'X-AUTH': xboxApiKey, 'Accept-Language': 'en-US' }
 
   /**
    * Returns a specific game
    * from xboxapi.com
    * @param {String} id - Game ID
    */
-  const getGame = async (id) => {
+  const getUsGame = async (id) => {
     try {
       const response = await axios.default.get(`${xboxApiUrl}/marketplace/show/${id}`, { headers })
+      if (response && response.data) {
+        return response.data
+      }
+      throw new Error(`Unable to obtain game with ID ${id}`)
+    } catch (e) {
+      return { error: 'Internal Server Error', message: 'Unable to reach xboxapi.com services' }
+    }
+  }
+
+  /**
+   * Returns a specific game
+   * from xboxapi.com
+   * @param {String} id - Game ID
+   */
+  const getEuGame = async (id) => {
+    try {
+      const response = await axios.default.get(`${xboxApiUrl}/marketplace/show/${id}`, { headers: { ...headers, 'Accept-Language': 'es-ES' } })
       if (response && response.data) {
         return response.data
       }
@@ -56,7 +73,9 @@ const XboxLiveAPI = () => {
     }
   }
 
-  return { getGame, getGames, getLatestGames }
+  return {
+    getUsGame, getEuGame, getGames, getLatestGames,
+  }
 }
 
 module.exports = XboxLiveAPI()

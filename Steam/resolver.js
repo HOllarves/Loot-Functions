@@ -5,13 +5,78 @@ const SteamAPI = require('steamapi')
 const { getUsPrice } = require('./services/steamPrice')
 // Instanciating new class
 const steam = new SteamAPI(process.env.STEAM_KEY)
+// Steam API base URL
+const steamUrl = 'https://steamcommunity.com/id/'
 
 module.exports = {
   Query: {
-    SteamGame: async (parent, args, context) => {
+    SteamUser: async (parent, args) => {
+      let { uid } = args
+      const { username } = args
+      if (!uid) {
+        uid = await steam.resolve(`${steamUrl}${username}`)
+      }
+      const steamUser = await steam.getUserSummary(uid)
+      return steamUser
+    },
+    SteamFeaturedCategories: async () => {
+      const featured = await steam.getFeaturedCategories()
+      return featured
+    },
+    SteamFeaturedGames: async () => {
+      const featured = await steam.getFeaturedGames()
+      return featured
+    },
+    SteamGame: async (parent, args) => {
       const { id } = args
       const game = await steam.getGameDetails(id)
       return game
+    },
+    SteamGameNews: async (parent, args) => {
+      const { id } = args
+      const news = await steam.getGameNews(id)
+      return news
+    },
+    SteamUserGames: async (parent, args) => {
+      let { uid } = args
+      const { username } = args
+      if (!uid) {
+        uid = await steam.resolve(`${steamUrl}${username}`)
+      }
+      const games = await steam.getUserOwnedGames(uid)
+      return games
+    },
+    SteamUserRecentGames: async (parent, args) => {
+      let { uid } = args
+      const { username } = args
+      if (!uid) {
+        uid = await steam.resolve(`${steamUrl}${username}`)
+      }
+      const games = await steam.getUserRecentGames(uid)
+      return games
+    },
+    SteamUserLevel: async (parent, args) => {
+      let { uid } = args
+      const { username } = args
+      if (!uid) {
+        uid = await steam.resolve(`${steamUrl}${username}`)
+      }
+      const lvl = await steam.getUserLevel(uid)
+      return lvl
+    },
+    SteamUserFriends: async (parent, args) => {
+      let { uid } = args
+      const { username } = args
+      if (!uid) {
+        uid = await steam.resolve(`${steamUrl}${username}`)
+      }
+      let friends = await steam.getUserFriends(uid)
+      const friendIds = friends.map((f) => f.steamID).map((id) => steam.getUserSummary(id))
+      const friendNames = await Promise.all(friendIds)
+      friends = friends.map((f) => (
+        { ...f, username: friendNames.find((x) => x.steamID === f.steamID).nickname }
+      ))
+      return friends
     },
   },
   Game: {

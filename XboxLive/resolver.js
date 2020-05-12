@@ -1,6 +1,6 @@
 const Auth = require('./services/auth')
 
-const XboxLiveAPI = require('./services/xboxlive')
+const { getEuGame, getUsGame, getGames } = require('./services/xboxlive')
 
 const findXboxPrice = (DisplaySkuAvailabilities) => {
   if (DisplaySkuAvailabilities && DisplaySkuAvailabilities.length) {
@@ -18,18 +18,19 @@ const findXboxPrice = (DisplaySkuAvailabilities) => {
     })
     return price
   }
+  return null
 }
 
 module.exports = {
   Query: {
     XboxGame: async (parent, args) => {
       const { id } = args
-      const response = await XboxLiveAPI.getGame(id)
+      const response = await getUsGame(id)
       return response.data.Product
     },
     XboxGames: async (parent, args) => {
       const { search } = args
-      const response = await XboxLiveAPI.getGames(search)
+      const response = await getGames(search)
       return response.Products
     },
   },
@@ -52,16 +53,27 @@ module.exports = {
       }
       return game
     },
-    XboxPrice: async (xboxGame) => {
-      const game = xboxGame
-      return findXboxPrice(game.DisplaySkuAvailabilities)
+    USXboxPrice: async (xboxGame) => {
+      const { id } = xboxGame
+      const game = await getUsGame(id)
+      if (game && game.Products[0]) {
+        return findXboxPrice(game.Products[0].DisplaySkuAvailabilities)
+      }
+      return null
+    },
+    EUXboxPrice: async (xboxGame) => {
+      const { id } = xboxGame
+      const game = await getEuGame(id)
+      if (game && game.Products[0]) {
+        return findXboxPrice(game.Products[0].DisplaySkuAvailabilities)
+      }
+      return null
     },
     // eslint-disable-next-line no-underscore-dangle
     async __resolveReference(game) {
       const id = game.XBOX_ID && game.XBOX_ID.includes('?') ? game.XBOX_ID.split('?')[0] : game.XBOX_ID
       if (id) {
-        const xboxGame = await XboxLiveAPI.getGame(id)
-        return xboxGame.Products[0]
+        return { id }
       }
       return {}
     },
