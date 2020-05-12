@@ -8,18 +8,13 @@
       "methods": [
         "get",
         "post"
-      ]
+      ],
+      "route": "feed"
     },
     {
       "type": "http",
       "direction": "out",
       "name": "res"
-    },
-    {
-      "schedule": "0 0 8 * * *",
-      "name": "dbFeed",
-      "type": "timerTrigger",
-      "direction": "in"
     }
   ]
 }

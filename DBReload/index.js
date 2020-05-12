@@ -1,4 +1,4 @@
-module.exports = function (context, req) {
+module.exports = async function (context, myTimer) {
   const mongoose = require('mongoose')
 
   const eshop = require('nintendo-switch-eshop')
@@ -15,6 +15,10 @@ module.exports = function (context, req) {
   mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
 
   const cjBaseUrl = 'https://product-search.api.cj.com/v2/product-search'
+
+  if (myTimer.IsPastDue) {
+    context.log('JavaScript is running late!');
+  }
 
   let params = {
     'website-id': process.env.CJ_WEBSITE_ID,
@@ -45,7 +49,6 @@ module.exports = function (context, req) {
   db.once('open', async () => {
     saveCJProducts()
     saveNintendoData()
-    console.log("Here!")
   })
 
   const saveNintendoData = async () => {
@@ -122,7 +125,6 @@ module.exports = function (context, req) {
     }
     return []
   }
-
   const loadCJData = async (loadMore) => {
     try {
       if (loadMore) {
@@ -135,5 +137,4 @@ module.exports = function (context, req) {
       throw new Error(e)
     }
   }
-
-}
+};
