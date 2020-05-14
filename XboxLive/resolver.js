@@ -2,7 +2,7 @@ const Auth = require('./services/auth')
 
 const { getEuGame, getUsGame, getGames } = require('./services/xboxlive')
 
-const findXboxPrice = (DisplaySkuAvailabilities) => {
+const findXboxPrice = (DisplaySkuAvailabilities, currency) => {
   if (DisplaySkuAvailabilities && DisplaySkuAvailabilities.length) {
     let price = null
     DisplaySkuAvailabilities.forEach((sku) => {
@@ -10,9 +10,10 @@ const findXboxPrice = (DisplaySkuAvailabilities) => {
         const priceObj = sku.Availabilities.find((a) => a
           && a.OrderManagementData
           && a.OrderManagementData.Price
-          && a.OrderManagementData.Price.ListPrice > 0)
+          && a.OrderManagementData.Price.ListPrice > 0
+          && a.OrderManagementData.Price.CurrencyCode === currency)
         if (priceObj) {
-          price = priceObj.OrderManagementData.Price.ListPrice * 100
+          price = parseInt((priceObj.OrderManagementData.Price.ListPrice * 100).toFixed(0), 10)
         }
       }
     })
@@ -57,7 +58,7 @@ module.exports = {
       const { id } = xboxGame
       const game = await getUsGame(id)
       if (game && game.Products[0]) {
-        return findXboxPrice(game.Products[0].DisplaySkuAvailabilities)
+        return findXboxPrice(game.Products[0].DisplaySkuAvailabilities, 'USD')
       }
       return null
     },
@@ -65,7 +66,7 @@ module.exports = {
       const { id } = xboxGame
       const game = await getEuGame(id)
       if (game && game.Products[0]) {
-        return findXboxPrice(game.Products[0].DisplaySkuAvailabilities)
+        return findXboxPrice(game.Products[0].DisplaySkuAvailabilities, 'EUR')
       }
       return null
     },

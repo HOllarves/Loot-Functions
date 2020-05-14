@@ -17,10 +17,10 @@ const Mongo = () => {
     if (data && data.length > 0) {
       return data
     }
-    const cjLive = await CJSearch(name)
-    if (cjLive) {
-      return cjLive
-    }
+    // const cjLive = await CJSearch(name)
+    // if (cjLive) {
+    //   return cjLive
+    // }
     return null
   }
   /**
