@@ -1,14 +1,11 @@
-module.exports = function (context, req) {
+module.exports = async function (context, myTimer) {
   const mongoose = require('mongoose')
-
-  const eshop = require('nintendo-switch-eshop')
 
   const axios = require('axios').default
 
   const { xml2json } = require('xml-js')
 
   const CJProduct = require('../CJ/db/models/product')
-  const { EUNintendo, USNintendo } = require('../NintendoShop/db/models/nintendo')
 
   const db = mongoose.connection
 
@@ -20,10 +17,18 @@ module.exports = function (context, req) {
     'website-id': process.env.CJ_WEBSITE_ID,
     'advertiser-ids': 'joined',
     keywords: '',
-    currency: 'USD',
+    currency: '',
     'records-per-page': 1000,
     'page-number': 1
   }
+
+  const regions = ['EU', 'US']
+  const platforms = ['PC', 'Xbox One', 'Nintendo Switch', 'PS4']
+  const gameType = ['DLC', 'Season Pass', 'Full']
+  const methods = ['Steam Gift', 'Steam Altergift', 'CD Key']
+  const nameRegex = /Steam\ CD\ Key|Steam\ Gift|Steam|Altergift|Uplay\ CD\ Key|Uplay|Origin\ CD\ Key|Origin|Epic\ Games\ CD\ Key|Epic\ Games|XBOX\ ONE\ CD\Key|Xbox\ One\ CD\ Key|XBOX\ ONE|Xbox\ One|PS4\ CD\ Key|PS4|ps4|EU|US|Season\ Pass|CD\ Key/gi
+
+  let totalGames = 0
 
   let headers = {
     Authorization: `Bearer ${process.env.CJ_TOKEN}`
@@ -44,30 +49,7 @@ module.exports = function (context, req) {
 
   db.once('open', async () => {
     saveCJProducts()
-    saveNintendoData()
-    console.log("Here!")
   })
-
-  const saveNintendoData = async () => {
-    let usGames = await eshop.getGamesAmerica()
-    usGames = usGames.map(us => {
-      const price = parseInt((us.msrp * 100).toFixed(0))
-      return { ...us, slug: slugify(us.title), price: !isNaN(price) ? price : 0, lastUpdate: new Date() }
-    })
-    let euGames = await eshop.getGamesEurope()
-    euGames = euGames.map(eu => {
-      const price = parseInt((eu.price_regular_f * 100).toFixed(0))
-      return { ...eu, slug: slugify(eu.title), price: !isNaN(price) ? price : 0, lastUpdate: new Date() }
-    })
-    for (const us of usGames) {
-      process.stdout.write(`Upating US Games ${usGames.indexOf(us)} / ${usGames.length} \r`)
-      await USNintendo.updateOne({ slug: us.slug }, us, { upsert: true })
-    }
-    for (const eu of euGames) {
-      process.stdout.write(`Upating EU Games ${euGames.indexOf(eu)} / ${euGames.length} \r`)
-      await EUNintendo.updateOne({ slug: eu.slug }, eu, { upsert: true })
-    }
-  }
 
   const saveCJProducts = async (loadMore = false) => {
     try {
@@ -75,7 +57,7 @@ module.exports = function (context, req) {
       if (data && data.length > 0) {
         for (let d of data) {
           process.stdout.write(`Upating ${data.indexOf(d)} / ${data.length} \r`)
-          await CJProduct.updateOne({ slug: d.slug, advertiser_id: d.advertiser_id }, d, { upsert: true })
+          await CJProduct.updateOne({ ad_id: d.ad_id }, d, { upsert: true })
         }
         lastBatch = data.length
         if (lastBatch > 0) {
@@ -83,8 +65,9 @@ module.exports = function (context, req) {
         }
       } else {
         console.log("Process Done without errors :D")
+        console.log("Games updated/created: ", totalGames)
         return context.res = {
-          body: { success: true }
+          body: { success: true, totalGames }
         }
       }
     } catch (e) {
@@ -98,42 +81,199 @@ module.exports = function (context, req) {
     const jsonData = xml2json(data, { compact: true, spaces: 4 })
     const jsonResults = JSON.parse(jsonData)['cj-api'].products.product
     if (jsonResults && jsonResults.length > 0) {
-      console.log("JSON Results", jsonResults.length)
-      const parsedData = jsonResults.map((x) => ({
-        ad_id: x['ad-id'] ? x['ad-id']._text : null,
-        advertiser_category: x['advertiser-category'] ? x['advertiser-category']._text : null,
-        advertiser_id: x['advertiser-id'] ? x['advertiser-id']._text : null,
-        advertiser_name: x['advertiser-name'] ? x['advertiser-name']._text : null,
-        buy_url: x['buy-url'] ? x['buy-url']._text : null,
-        catalog_id: x['catalog-id'] ? x['catalog-id']._text : null,
-        currency: x.currency ? x.currency._text : null,
-        description: x.description ? x.description._text : null,
-        image_url: x['image-url'] ? x['image-url']._text : null,
-        in_stock: x['in-stock'] ? x['in-stock']._text : null,
-        name: x.name ? x.name._text : null,
-        price: x.price ? parseInt((parseFloat(x.price._text) * 100).toFixed(0)) : null,
-        sale_price: x['sale-price'] ? parseInt((parseFloat(x['sale-price']._text) * 100).toFixed(0)) : null,
-        sku: x.sku ? x.sku._text : null,
-        slug: slugify(x.name._text),
-        lastUpdate: new Date()
-      }))
-      console.log("JSON Parsed", parsedData.length)
+      totalGames += jsonResults.length
+      const parsedData = jsonResults.map((x) => {
+
+        const advertiserName = x['advertiser-name'] && x['advertiser-name']._text ? x['advertiser-name']._text : null
+        let name = x.name && x.name._text ? x.name._text : null
+        let type = gameType.find(g => name.includes(g)) || 'Full'
+
+        if (advertiserName === 'Kinguin') {
+          const platform = platforms.find(p => {
+            if (p === "PC") {
+              return name.match(/Steam|Epic\ Games|Origin|Uplay/gi)
+            }
+            if (p === "Xbox One") {
+              return name.match(/Xbox|Xbox One/gi)
+            }
+            return name.includes(p)
+          })
+          const region = regions.find(r => name.includes(r))
+          const method = methods.find(m => name.includes(m))
+          name = name.replace(nameRegex, "").trim()
+          console.log({ name, type, region, platform })
+
+          return {
+            ad_id: x['ad-id'] && x['ad-id']._text ?
+              x['ad-id']._text : null,
+
+            advertiser_category: x['advertiser-category'] && x['advertiser-category']._text ?
+              x['advertiser-category']._text : null,
+
+            advertiser_id: x['advertiser-id'] && x['advertiser-id']._text ?
+              x['advertiser-id']._text : null,
+
+            advertiser_name: advertiserName,
+
+            buy_url: x['buy-url'] && x['buy-url']._text ?
+              x['buy-url']._text : null,
+
+            catalog_id: x['catalog-id'] && x['catalog-id']._text ?
+              x['catalog-id']._text : null,
+
+            currency: x.currency && x.currency._text ?
+              x.currency._text : null,
+
+            description: x.description && x.description._text ?
+              x.description._text : null,
+
+            image_url: x['image-url'] && x['image-url']._text ?
+              x['image-url']._text : null,
+
+            in_stock: x['in-stock'] && x['in-stock']._text ?
+              x['in-stock']._text : null,
+
+            name,
+
+            platform,
+
+            type,
+
+            region,
+
+            method,
+
+            price: x.price && x.price._text ?
+              parseInt((parseFloat(x.price._text) * 100).toFixed(0)) : null,
+
+            sale_price: x['sale-price'] && x['sale-price']._text ?
+              parseInt((parseFloat(x['sale-price']._text) * 100).toFixed(0)) : null,
+
+            sku: x.sku && x.sku._text ?
+              x.sku._text : null,
+
+            slug: slugify(name),
+
+            last_update: new Date()
+          }
+        }
+        if (advertiserName === 'GamersGate.com') {
+          return {
+            ad_id: x['ad-id'] && x['ad-id']._text ?
+              x['ad-id']._text : null,
+
+            advertiser_category: x['advertiser-category'] && x['advertiser-category']._text ?
+              x['advertiser-category']._text : null,
+
+            advertiser_id: x['advertiser-id'] && x['advertiser-id']._text ?
+              x['advertiser-id']._text : null,
+
+            advertiser_name: advertiserName,
+            buy_url: x['buy-url'] && x['buy-url']._text ?
+              x['buy-url']._text : null,
+
+            catalog_id: x['catalog-id'] && x['catalog-id']._text ?
+              x['catalog-id']._text : null,
+
+            currency: x.currency && x.currency._text ?
+              x.currency._text : null,
+
+            description: x.description && x.description._text ?
+              x.description._text : null,
+
+            image_url: x['image-url'] && x['image-url']._text ?
+              x['image-url']._text : null,
+
+            in_stock: x['in-stock'] && x['in-stock']._text ?
+              x['in-stock']._text : null,
+
+            platform: 'PC',
+
+            name,
+
+            type,
+
+            method: 'CD Key',
+
+            price: x.price && x.price._text ?
+              parseInt((parseFloat(x.price._text) * 100).toFixed(0)) : null,
+
+            sale_price: x['sale-price'] && x['sale-price']._text ?
+              parseInt((parseFloat(x['sale-price']._text) * 100).toFixed(0)) : null,
+
+            sku: x.sku && x.sku._text ?
+              x.sku._text : null,
+
+            slug: slugify(name),
+
+            last_update: new Date()
+          }
+        }
+        return {
+          ad_id: x['ad-id'] && x['ad-id']._text ?
+            x['ad-id']._text : null,
+
+          advertiser_category: x['advertiser-category'] && x['advertiser-category']._text ?
+            x['advertiser-category']._text : null,
+
+          advertiser_id: x['advertiser-id'] && x['advertiser-id']._text ?
+            x['advertiser-id']._text : null,
+
+          advertiser_name: advertiserName,
+          buy_url: x['buy-url'] && x['buy-url']._text ?
+            x['buy-url']._text : null,
+
+          catalog_id: x['catalog-id'] && x['catalog-id']._text ?
+            x['catalog-id']._text : null,
+
+          currency: x.currency && x.currency._text ?
+            x.currency._text : null,
+
+          description: x.description && x.description._text ?
+            x.description._text : null,
+
+          image_url: x['image-url'] && x['image-url']._text ?
+            x['image-url']._text : null,
+
+          in_stock: x['in-stock'] && x['in-stock']._text ?
+            x['in-stock']._text : null,
+
+          name,
+
+          platform: null,
+
+          type,
+
+          method: 'CD Key',
+
+          price: x.price && x.price._text ?
+            parseInt((parseFloat(x.price._text) * 100).toFixed(0)) : null,
+
+          sale_price: x['sale-price'] && x['sale-price']._text ?
+            parseInt((parseFloat(x['sale-price']._text) * 100).toFixed(0)) : null,
+
+          sku: x.sku && x.sku._text ?
+            x.sku._text : null,
+
+          slug: slugify(x.name._text),
+          last_update: new Date()
+        }
+      })
       return parsedData
     }
     return []
   }
-
   const loadCJData = async (loadMore) => {
     try {
       if (loadMore) {
         params['page-number'] += 1
       }
       console.log('Page #', params['page-number'])
+      console.log('Total Game #', totalGames)
       const response = await axios.get(cjBaseUrl, { headers, params })
       return response
     } catch (e) {
       throw new Error(e)
     }
   }
-
-}
+};

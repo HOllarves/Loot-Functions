@@ -26,7 +26,7 @@ module.exports = async function (context, myTimer) {
   const platforms = ['PC', 'Xbox One', 'Nintendo Switch', 'PS4']
   const gameType = ['DLC', 'Season Pass', 'Full']
   const methods = ['Steam Gift', 'Steam Altergift', 'CD Key']
-  const nameRegex = /Steam\ CD\ Key|Steam\ Gift|Steam|Altergift|Uplay\ CD\ Key|Uplay|Origin\ CD\ Key|Origin|Epic\ Games\ CD\ Key|Epic\ Games|XBOX\ ONE\ CD\Key|Xbox\ One\ CD\ Key|XBOX\ ONE|Xbox\ One|PS4\ CD\ Key|PS4|ps4|EU|US|Season\ Pass|CD \Key/gi
+  const nameRegex = /Steam\ CD\ Key|Steam\ Gift|Steam\ Altergift|Steam|Altergift|Uplay\ CD\ Key|Uplay|Origin\ CD\ Key|Origin|Epic\ Games\ CD\ Key|Epic\ Games|XBOX\ ONE\ CD\Key|Xbox\ One\ CD\ Key|XBOX\ ONE|Xbox\ One|PS4\ CD\ Key|PS4|ps4|EU|US|Season\ Pass|CD \Key/gi
 
   let totalGames = 0
 
