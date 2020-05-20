@@ -3,20 +3,21 @@ const { search, searchByPartner } = require('./services/mongo')
 module.exports = {
   Query: {
     product: async (parent, args) => {
-      const { name } = args
-      const response = await search(name)
-      return response
+      const { name, currency = 'USD' } = args
+      return search(name, currency)
     },
-    products: async () => searchByPartner(),
+    products: async (parent, args) => {
+      const { currency } = args
+      return searchByPartner(currency)
+    },
   },
   Game: {
-    products: (games) => games,
+    products: ({ slug }, { currency, platform }) => search(slug, { currency, platform }),
     // eslint-disable-next-line no-underscore-dangle
     async __resolveReference(game) {
       const { slug } = game
       if (slug) {
-        const response = await search(slug)
-        return response
+        return { slug }
       }
       return null
     },

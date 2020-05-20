@@ -1,17 +1,21 @@
 const Mongo = () => {
   const model = require('../db/models/product')
-  const { search: CJSearch } = require('./cj')
+  // const { search: CJSearch } = require('./cj')
   /**
    * Returns a specific product in
    * each partner
    * @param {String} name
    * @param {String} currency
    */
-  const search = async (name, currency = 'USD') => {
+  const search = async (name, { currency = 'USD', platform }) => {
     const client = await require('../db/client').startDB()
     const advertiserIds = process.env.CJ_ADVERTISER_IDS.split(',').filter((a) => a)
-    const promises = advertiserIds.map((id) => (
-      model.findOne({ slug: name, currency, advertiser_id: id })))
+    const query = { slug: name, currency }
+    if (platform) query.$or = [{ platform }, { platform: null }]
+    const promises = advertiserIds.map((id) => {
+      query.advertiser_id = id
+      return model.findOne(query)
+    })
     const data = (await Promise.all(promises)).filter((d) => d)
     client.close()
     if (data && data.length > 0) {

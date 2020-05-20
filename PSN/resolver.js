@@ -29,12 +29,14 @@ module.exports = {
     },
     USPSNPrice: async (psnGame) => {
       if (psnGame[0] && psnGame[0].default_sku && psnGame[0].default_sku.display_price) {
+        if (psnGame[0].default_sku.display_price === 'Free') { return 0 }
         return (parseFloat(psnGame[0].default_sku.display_price.replace('$', '')) * 100).toFixed(0)
       }
       return null
     },
     EUPSNPrice: async (psnGame) => {
       if (psnGame[1] && psnGame[1].default_sku && psnGame[1].default_sku.display_price) {
+        if (psnGame[1].default_sku.display_price === 'Gratis') { return 0 }
         return (parseFloat(psnGame[1].default_sku.display_price.replace('€', '')) * 100).toFixed(0)
       }
       return null

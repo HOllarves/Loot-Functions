@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const typeString = { type: String }
+// eslint-disable-next-line no-unused-vars
 const textIndex = {
   type: String, index: true, required: true, text: true,
 }
@@ -27,9 +28,9 @@ const cjProductSchema = new mongoose.Schema({
   region: typeString,
   type: typeString,
   method: typeString,
-  sku: typeString,
-  slug: textIndex,
-  last_update: lastUpdate
+  sku: typeIndex,
+  slug: typeIndex,
+  last_update: lastUpdate,
 })
 
 module.exports = mongoose.model('CJProduct', cjProductSchema)
