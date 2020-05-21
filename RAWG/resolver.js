@@ -1,10 +1,13 @@
+/* eslint-disable import/no-unresolved */
 const { getGame, getGames } = require('./services/rawg')
+const slugDict = require('./slug-dict/slug-dict')
 
 module.exports = {
   Query: {
     Game: async (parent, args) => {
       const { id } = args
-      const game = await getGame(id)
+      let game = await getGame(id)
+      game = slugDict(game)
       if (game.stores && game.stores.length) {
         game.stores.forEach((r) => {
           if (r.store && r.store.slug === 'playstation-store') {
