@@ -3,7 +3,7 @@ const { search, searchByPartner } = require('./services/mongo')
 module.exports = {
   Query: {
     product: async (parent, args) => {
-      const { name, currency = 'USD' } = args
+      const { name, currency } = args
       return search(name, currency)
     },
     products: async (parent, args) => {

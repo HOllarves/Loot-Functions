@@ -2,7 +2,7 @@
 module.exports = (game) => {
   const {
     platforms, types, regions, methods, nameRegex, slugify,
-  } = require('../constants')
+  } = require('../../CJDB/constants')
 
   let name = game.name && game.name._text ? game.name._text : null
 

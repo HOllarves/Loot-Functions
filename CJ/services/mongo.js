@@ -7,10 +7,11 @@ const Mongo = () => {
    * @param {String} name
    * @param {String} currency
    */
-  const search = async (name, { currency = 'USD', platform }) => {
+  const search = async (name, { currency, platform }) => {
     const client = await require('../db/client').startDB()
     const advertiserIds = process.env.CJ_ADVERTISER_IDS.split(',').filter((a) => a)
-    const query = { slug: name, currency }
+    const query = { slug: name }
+    if (currency) query.currency = currency
     if (platform) query.$or = [{ platform }, { platform: null }]
     const promises = advertiserIds.map((id) => {
       query.advertiser_id = id

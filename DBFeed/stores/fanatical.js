@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
 module.exports = (game) => {
-  const { types, slugify } = require('../constants')
+  const { types, slugify } = require('../../CJDB/constants')
 
   const advertiserName = game['advertiser-name'] && game['advertiser-name']._text ? game['advertiser-name']._text : null
 
