@@ -1,0 +1,10 @@
+type Query {
+  USPrice(url: String!): Int
+  EUPrice(url: String!): Int
+}
+
+extend type Game @key(fields: "stores { url }") {
+  url: String @external
+  USEpicPrice: Int
+  EUEpicPrice: Int
+}

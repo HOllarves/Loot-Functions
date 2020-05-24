@@ -22,6 +22,7 @@
     "nintendo-switch-eshop": "^3.0.1",
     "node-fetch": "^2.6.0",
     "npm": "^6.14.5",
+    "puppeteer": "^3.1.0",
     "querystring": "^0.2.0",
     "require-graphql-file": "^1.0.1",
     "steamapi": "^2.0.7",

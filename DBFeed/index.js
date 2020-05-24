@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable no-plusplus */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable func-names */
@@ -37,7 +38,9 @@ module.exports = async function () {
       this.cjCurrencies = ['USD', 'EUR']
       this.currentAdvertiser = this.advertisers[0]
       this.currentCurrency = this.cjCurrencies[0]
-      this.storesConfig = { "8": 40, "5": 1, "3": 20, "2": 40 }
+      this.storesConfig = {
+        8: 40, 5: 1, 3: 20, 2: 40,
+      }
       this.lastChar = this.currentAdvertiser ? this.currentAdvertiser.substr(-1) : false
       this.step = this.lastChar && this.storesConfig.hasOwnProperty(this.lastChar) ? this.storesConfig[this.lastChar] : 1
       this.currentLow = -1
@@ -99,7 +102,8 @@ module.exports = async function () {
 
   const db = mongoose.connection
 
-  mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  mongoose.connect(process.env.DB_URL,
+    { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true })
 
   let lastBatch = null
   let retries = 0
