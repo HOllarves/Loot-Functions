@@ -21,23 +21,25 @@ module.exports = async function () {
     Authorization: `Bearer ${process.env.CJ_TOKEN}`,
   }
 
-  const kinguin = require('./stores/kinguin')
+  const kinguin = require('../CJDB/stores/kinguin')
 
-  const gamersGate = require('./stores/gamers-gate')
+  const gamersGate = require('../CJDB/stores/gamers-gate')
 
-  const GMG = require('./stores/green-man-gaming')
+  const GMG = require('../CJDB/stores/green-man-gaming')
 
-  const fanatical = require('./stores/fanatical')
+  const fanatical = require('../CJDB/stores/fanatical')
 
   class MainConfig {
     constructor() {
       this.min = 0
       this.max = 100
-      this.step = 10
       this.advertisers = process.env.CJ_ADVERTISER_IDS.split(',')
       this.cjCurrencies = ['USD', 'EUR']
       this.currentAdvertiser = this.advertisers[0]
       this.currentCurrency = this.cjCurrencies[0]
+      this.storesConfig = { "8": 40, "5": 1, "3": 20, "2": 40 }
+      this.lastChar = this.currentAdvertiser ? this.currentAdvertiser.substr(-1) : false
+      this.step = this.lastChar && this.storesConfig.hasOwnProperty(this.lastChar) ? this.storesConfig[this.lastChar] : 1
       this.currentLow = -1
       this.currentHigh = 0
       this.currentPage = 1
@@ -69,6 +71,8 @@ module.exports = async function () {
         if (this.advertisers[nextAdvertiser]) {
           this.currentAdvertiser = this.advertisers[nextAdvertiser]
           this.currentCurrency = this.cjCurrencies[0]
+          this.lastChar = this.currentAdvertiser.substr(-1)
+          this.step = this.storesConfig[this.lastChar]
         } else {
           process.exit(0)
         }
@@ -167,6 +171,7 @@ module.exports = async function () {
         saveCJProducts(false)
       }
     } catch (e) {
+      console.error(e)
       throw new Error(e)
     }
   }

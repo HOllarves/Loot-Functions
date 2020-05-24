@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 
+mongoose.set('useCreateIndex', true)
+
 const typeString = { type: String }
 // eslint-disable-next-line no-unused-vars
 const textIndex = {

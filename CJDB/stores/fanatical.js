@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
 module.exports = (game) => {
-  const { types, slugify } = require('../constants')
+  const { types, slugify, platforms } = require('../constants')
 
   const advertiserName = game['advertiser-name'] && game['advertiser-name']._text ? game['advertiser-name']._text : null
 
@@ -9,9 +9,18 @@ module.exports = (game) => {
 
   const name = game.name && game.name._text ? game.name._text : null
 
+  const buyUrl = game['buy-url'] && game['buy-url']._text ? game['buy-url']._text : null
+
   let type = types.find((g) => name.toLowerCase().includes(g.toLowerCase())) || 'full'
 
   if (advertiserCategory === 'dlc' && type !== 'Season Pass') type = 'DLC'
+
+  const platform = platforms.find((p) => {
+    if (p === 'Nintendo Switch') {
+      return buyUrl.toLowerCase().includes('switch')
+    }
+    return buyUrl.toLowerCase().includes(p.toLowerCase())
+  }) || 'PC'
 
   return {
     ad_id: game['ad-id'] && game['ad-id']._text
@@ -43,7 +52,7 @@ module.exports = (game) => {
 
     name,
 
-    platform: 'PC',
+    platform,
 
     type,
 
