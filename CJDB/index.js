@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable no-plusplus */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable func-names */
@@ -8,7 +9,7 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-underscore-dangle */
 
-module.exports = async function () {
+module.exports = async function (context, myTimer) {
   const mongoose = require('mongoose')
 
   const axios = require('axios').default
@@ -29,6 +30,10 @@ module.exports = async function () {
 
   const fanatical = require('../CJDB/stores/fanatical')
 
+  if (myTimer.IsPastDue) {
+    context.log('JavaScript is running late!');
+  }
+
   class MainConfig {
     constructor() {
       this.min = 0
@@ -37,7 +42,9 @@ module.exports = async function () {
       this.cjCurrencies = ['USD', 'EUR']
       this.currentAdvertiser = this.advertisers[0]
       this.currentCurrency = this.cjCurrencies[0]
-      this.storesConfig = { "8": 40, "5": 1, "3": 20, "2": 40 }
+      this.storesConfig = {
+        8: 40, 5: 1, 3: 20, 2: 40,
+      }
       this.lastChar = this.currentAdvertiser ? this.currentAdvertiser.substr(-1) : false
       this.step = this.lastChar && this.storesConfig.hasOwnProperty(this.lastChar) ? this.storesConfig[this.lastChar] : 1
       this.currentLow = -1
@@ -95,11 +102,12 @@ module.exports = async function () {
 
   const mainConfig = new MainConfig()
 
-  const CJProduct = require('../CJ/db/models/product')
+  const CJProduct = require('../Products/db/models/product')
 
   const db = mongoose.connection
 
-  mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  mongoose.connect(process.env.DB_URL,
+    { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true })
 
   let lastBatch = null
   let retries = 0
@@ -153,18 +161,36 @@ module.exports = async function () {
     return []
   }
 
+  /**
+ * Bulk-upsert an array of records
+ * @param  {Array}    records  List of records to update
+ * @param  {Model}    Model    Mongoose model to update
+ * @param  {Object}   match    Database field to match
+ * @return {Promise}  always resolves a BulkWriteResult
+ */
+  async function save(records, Model, match) {
+    match = match || ['_id'];
+    return new Promise(function (resolve, reject) {
+      var bulk = Model.collection.initializeUnorderedBulkOp();
+      records.forEach(function (record) {
+        var query = {};
+        match.forEach(m => query[m] = record[m])
+        bulk.find(query).upsert().updateOne(record);
+      });
+      bulk.execute(function (err, bulkres) {
+        if (err) return reject(err);
+        resolve(bulkres);
+      });
+    });
+  }
+
   const saveCJProducts = async (loadMore = true) => {
     try {
       const data = await processCJData(loadMore)
       lastBatch = data.length
       if (data && lastBatch > 0) {
-        for (const d of data) {
-          process.stdout.write(`Upating ${data.indexOf(d)} / ${data.length} \r`)
-          const doc = await CJProduct.findOneAndUpdate(
-            { sku: d.sku, currency: d.currency }, d, { upsert: true },
-          )
-          if (doc) { mainConfig.updatedGames++ } else { mainConfig.newGames++ }
-        }
+        console.log("Saving", data.length)
+        await save(data, CJProduct, ['sku', 'currency'])
         mainConfig.totalGames += lastBatch
         saveCJProducts(true)
       } else {
@@ -175,6 +201,8 @@ module.exports = async function () {
       throw new Error(e)
     }
   }
+
+
 
   db.once('open', async () => {
     saveCJProducts()
