@@ -8,7 +8,7 @@ const resolvers = require('./resolver')
 
 const server = new ApolloServer({
   schema: buildFederatedSchema([{ typeDefs: gql(typeDefs), resolvers }]),
-  playground: true,
+  playground: false,
 })
 
 module.exports = server.createHandler()

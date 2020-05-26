@@ -18,11 +18,12 @@ type CJProduct {
   name: String
   slug: String
   price: Int
+  region: String
   sale_price: Int
   sku: String
 }
 
 extend type Game @key(fields: "slug") {
   slug: String! @external
-  products(currency:String platform:String): [CJProduct!]
-}
+  products(currency:String platform:String region:String): [CJProduct!]
+} 

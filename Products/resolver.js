@@ -12,7 +12,7 @@ module.exports = {
     },
   },
   Game: {
-    products: ({ slug }, { currency, platform }) => search(slug, { currency, platform }),
+    products: ({ slug }, { currency, platform, region }) => search(slug, { currency, platform, region }),
     // eslint-disable-next-line no-underscore-dangle
     async __resolveReference(game) {
       const { slug } = game
