@@ -1,5 +1,5 @@
 {
-  "name": "GraphQL",
+  "name": "graphql",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -15,15 +15,15 @@
     "apollo-link-http": "^1.5.17",
     "apollo-server-azure-functions": "^2.12.0",
     "axios": "^0.19.2",
+    "decode-html": "^2.0.0",
     "dotenv": "^8.2.0",
     "eslint-config-airbnb": "^18.1.0",
     "graphql-tag": "^2.10.3",
     "mongoose": "^5.9.12",
     "nintendo-switch-eshop": "^3.0.1",
     "node-fetch": "^2.6.0",
-    "npm": "^6.14.5",
     "puppeteer": "^3.1.0",
-    "querystring": "^0.2.0",
+    "qs": "^6.9.4",
     "require-graphql-file": "^1.0.1",
     "steamapi": "^2.0.7",
     "xml-js": "^1.6.11"

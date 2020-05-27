@@ -120,7 +120,6 @@ module.exports = async function (context, myTimer) {
         mainConfig.nextPage()
       }
       const params = mainConfig.getParams()
-      console.log({ params })
       const response = await axios.get(cjBaseUrl, { headers, params })
       retries = 0
       return response

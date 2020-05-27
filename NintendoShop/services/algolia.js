@@ -1,6 +1,6 @@
 const axios = require('axios')
 const eshop = require('nintendo-switch-eshop')
-const { stringify } = require('querystring')
+const { stringify } = require('qs')
 
 const AlgoliaSearch = () => {
   /**
