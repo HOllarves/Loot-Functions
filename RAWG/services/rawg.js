@@ -45,6 +45,29 @@ const RAWG = () => {
   }
 
   /**
+   * Returns game available DLC
+   * @param {String} id Game ID
+   */
+  const getDLC = async (id) => {
+    const dlc = await axios.default.get(`${rawBaseUrl}/${id}/additions`, { headers })
+    if (dlc.status === 200) {
+      return dlc.data.results
+    }
+    return []
+  }
+  /**
+   * Returns game franchise titles
+   * @param {String} id Game ID
+   */
+  const getFranchise = async (id) => {
+    const franchise = await axios.default.get(`${rawBaseUrl}/${id}/game-series`, { headers })
+    if (franchise.status === 200) {
+      return franchise.data.results
+    }
+    return []
+  }
+
+  /**
    * Return a list of game trailers
    * @param {String} id Game ID
    */
@@ -71,13 +94,19 @@ const RAWG = () => {
     const gameInfo = getGameDetails(id)
     const gameScreenshots = getScreenshots(id)
     const gameTrailers = getTrailers(id)
+    const DLC = getDLC(id)
+    const franchise = getFranchise(id)
     const [game, screenshots, trailers] = await Promise
       .all([
         gameInfo,
         gameScreenshots,
         gameTrailers,
+        DLC,
+        franchise,
       ])
-    return { ...game, screenshots, trailers }
+    return {
+      ...game, screenshots, trailers, DLC, franchise,
+    }
   }
 
   return {

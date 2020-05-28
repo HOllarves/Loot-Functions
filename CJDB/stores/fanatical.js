@@ -1,19 +1,23 @@
 /* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
 module.exports = (game) => {
-  const { types, slugify, platforms } = require('../constants')
+  const {
+    types, slugify, platforms, cleanName,
+  } = require('../constants')
 
   const advertiserName = game['advertiser-name'] && game['advertiser-name']._text ? game['advertiser-name']._text : null
 
   const advertiserCategory = game['advertiser-category'] && game['advertiser-category']._text ? game['advertiser-category']._text : null
 
-  const name = game.name && game.name._text ? game.name._text : null
+  let name = game.name && game.name._text ? game.name._text : null
 
   const buyUrl = game['buy-url'] && game['buy-url']._text ? game['buy-url']._text : null
 
   let type = types.find((g) => name.toLowerCase().includes(g.toLowerCase())) || 'full'
 
   if (advertiserCategory === 'dlc' && type !== 'Season Pass') type = 'DLC'
+
+  name = cleanName(name)
 
   const platform = platforms.find((p) => {
     if (p === 'Nintendo Switch') {

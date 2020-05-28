@@ -35,10 +35,50 @@ type Game @key(fields: "id")
   genres: [RawGenre]
   screenshots: [RawScreenshot]
   trailers: [RawTrailer]
+  DLC: [RawDLC]
+  franchise: [RawFranchise]
   PSN_ID: ID
   XBOX_ID: ID
   STEAM_ID: ID
   NINTENDO_ID: ID
+}
+
+type RawDLC @key(fields:"slug") {
+  id: Int!
+  slug: String!
+  name: String!
+  released: String
+  tba: Boolean
+  background_image: String
+  rating: Float
+  ratings: [RawRating]
+  ratings_count:Int
+  metacritic: Int
+  saturated_color: String
+  dominant_color: String
+  platforms: [RawPlatform]
+  genres: [RawGenre]
+  stores: [RawStore]
+  short_screenshots: [RawShortScreenshot]
+}
+
+type RawFranchise @key(fields:"slug") {
+  id: Int!
+  slug: String!
+  name: String!
+  released: String
+  tba: Boolean
+  background_image: String
+  rating: Float
+  ratings: [RawRating]
+  ratings_count:Int
+  metacritic: Int
+  saturated_color: String
+  dominant_color: String
+  platforms: [RawPlatform]
+  genres: [RawGenre]
+  stores: [RawStore]
+  short_screenshots: [RawShortScreenshot]
 }
 
 type RawShortScreenshot {

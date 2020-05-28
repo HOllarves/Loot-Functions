@@ -26,4 +26,14 @@ type CJProduct {
 extend type Game @key(fields: "slug") {
   slug: String! @external
   products(currency:String platform:String region:String): [CJProduct!]
-} 
+}
+
+extend type RawDLC @key(fields: "slug") {
+  slug: String! @external
+  products(currency:String platform:String region:String): [CJProduct!]
+}
+
+extend type RawFranchise @key(fields: "slug") {
+  slug: String! @external
+  products(currency:String platform:String region:String): [CJProduct!]
+}

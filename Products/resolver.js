@@ -22,4 +22,26 @@ module.exports = {
       return null
     },
   },
+  RawDLC: {
+    products: ({ slug }, { currency, platform, region }) => search(slug, { currency, platform, region }),
+    // eslint-disable-next-line no-underscore-dangle
+    async __resolveReference(game) {
+      const { slug } = game
+      if (slug) {
+        return { slug }
+      }
+      return null
+    },
+  },
+  RawFranchise: {
+    products: ({ slug }, { currency, platform, region }) => search(slug, { currency, platform, region }),
+    // eslint-disable-next-line no-underscore-dangle
+    async __resolveReference(game) {
+      const { slug } = game
+      if (slug) {
+        return { slug }
+      }
+      return null
+    },
+  },
 }

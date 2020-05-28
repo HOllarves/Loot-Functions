@@ -14,7 +14,7 @@ const Mongo = () => {
     const query = { slug: name }
     if (currency) query.currency = currency
     if (platform) query.platform = platform
-    if (region) query.$or = [{ region }, { region: 'Worldwide' }]
+    if (region) query.$or = [{ region }, { region: 'Worldwide' }, { region: null }]
     const promises = [CJ.find(query), IG.find(query)]
     let [cjData, igData] = await Promise.all(promises)
     if (igData && igData.length) {
