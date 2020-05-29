@@ -18,6 +18,7 @@ const IndieGalaGameSchema = new mongoose.Schema({
   advertiser_name: requiredTypeString,
   platform: requiredTypeString,
   price: typeNum,
+  sale_price: typeNum,
   currency: requiredTypeString,
   slug: typeIndex,
   lastUpdate,
