@@ -9,6 +9,7 @@
   "dependencies": {
     "@apollo/federation": "^0.14.1",
     "@apollo/gateway": "^0.14.1",
+    "apollo-server-azure-functions": "^2.12.0",
     "@xboxreplay/xboxlive-auth": "^3.3.0",
     "axios": "^0.19.2",
     "decode-html": "^2.0.0",
@@ -19,7 +20,7 @@
     "nintendo-switch-eshop": "^3.0.1",
     "qs": "^6.9.4",
     "require-graphql-file": "^1.0.1",
-    "steamapi": "^2.0.7",
+    "steamapi": "github:HOllarves/node-steamapi#master",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
