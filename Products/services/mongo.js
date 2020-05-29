@@ -1,6 +1,7 @@
 const Mongo = () => {
   const CJ = require('../db/models/product')
   const IG = require('../db/models/instant-gaming')
+  const IndieGala = require('../db/models/indie-gala-game')
   // const { search: CJSearch } = require('./cj')
   /**
    * Returns a specific product in
@@ -15,13 +16,11 @@ const Mongo = () => {
     if (currency) query.currency = currency
     if (platform) query.platform = platform
     if (region) query.$or = [{ region }, { region: 'Worldwide' }, { region: null }]
-    const promises = [CJ.find(query), IG.find(query)]
-    let [cjData, igData] = await Promise.all(promises)
-    if (igData && igData.length) {
-      // eslint-disable-next-line no-underscore-dangle
-      igData = igData.map((i) => ({ ...i._doc, advertiser_name: 'Instant Gaming' }))
-    }
-    const data = [...cjData, ...igData]
+    const promises = [CJ.find(query), IG.find(query), IndieGala.find(query)]
+    let [cjData, igData, indieGData] = await Promise.all(promises)
+    // eslint-disable-next-line no-underscore-dangle
+    if (igData && igData.length) { igData = igData.map((i) => ({ ...i._doc, advertiser_name: 'Instant Gaming' })) }
+    const data = [...cjData, ...igData, ...indieGData]
     client.close()
     if (data && data.length > 0) {
       return data
