@@ -57,7 +57,7 @@ module.exports = {
     USXboxPrice: async (xboxGame) => {
       const { id } = xboxGame
       const game = await getUsGame(id)
-      if (game && game.Products[0]) {
+      if (game && game.Products && game.Products.length > 0) {
         return findXboxPrice(game.Products[0].DisplaySkuAvailabilities, 'USD')
       }
       return null
@@ -65,7 +65,7 @@ module.exports = {
     EUXboxPrice: async (xboxGame) => {
       const { id } = xboxGame
       const game = await getEuGame(id)
-      if (game && game.Products[0]) {
+      if (game && game.Products && game.Products.length > 0) {
         return findXboxPrice(game.Products[0].DisplaySkuAvailabilities, 'EUR')
       }
       return null
