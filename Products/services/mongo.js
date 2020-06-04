@@ -2,7 +2,7 @@ const Mongo = () => {
   const CJ = require('../db/models/product')
   const IG = require('../db/models/instant-gaming')
   const IndieGala = require('../db/models/indie-gala-game')
-  const advertisers = ['Kinguin', 'GamersGate', 'Fanatical', 'Instant Gaming', 'Indie Gala', 'Gamebillet', 'Green Man Gaming US']
+  const GameBillet = require('../db/models/game-billet')
   // const { search: CJSearch } = require('./cj')
   /**
    * Returns a specific product in
@@ -17,11 +17,11 @@ const Mongo = () => {
     if (currency) query.currency = currency
     if (platform) query.platform = platform
     if (region) query.$or = [{ region }, { region: 'Worldwide' }, { region: null }]
-    const promises = [CJ.find(query), IG.find(query), IndieGala.find(query)]
-    let [cjData, igData, indieGData] = await Promise.all(promises)
+    const promises = [CJ.find(query), IG.find(query), IndieGala.find(query), GameBillet.find(query)]
+    let [cjData, igData, indieGData, gameBilletData] = await Promise.all(promises)
     // eslint-disable-next-line no-underscore-dangle
     if (igData && igData.length) { igData = igData.map((i) => ({ ...i._doc, advertiser_name: 'Instant Gaming' })) }
-    const data = [...cjData, ...igData, ...indieGData]
+    const data = [...cjData, ...igData, ...indieGData, ...gameBilletData]
       .sort((a, b) => {
         const priceA = a.sale_price || a.price
         const priceB = b.sale_price || b.price
