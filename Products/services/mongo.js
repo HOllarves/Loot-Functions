@@ -2,6 +2,7 @@ const Mongo = () => {
   const CJ = require('../db/models/product')
   const IG = require('../db/models/instant-gaming')
   const IndieGala = require('../db/models/indie-gala-game')
+  const advertisers = ['Kinguin', 'GamersGate', 'Fanatical', 'Instant Gaming', 'Indie Gala', 'Gamebillet', 'Green Man Gaming US']
   // const { search: CJSearch } = require('./cj')
   /**
    * Returns a specific product in
@@ -21,6 +22,27 @@ const Mongo = () => {
     // eslint-disable-next-line no-underscore-dangle
     if (igData && igData.length) { igData = igData.map((i) => ({ ...i._doc, advertiser_name: 'Instant Gaming' })) }
     const data = [...cjData, ...igData, ...indieGData]
+      .sort((a, b) => {
+        const priceA = a.sale_price || a.price
+        const priceB = b.sale_price || b.price
+        return priceA - priceB
+      })
+      .reduce((prev, curr) => {
+        const advertiserIn = prev.find((p) => p.advertiser_name === curr.advertiser_name)
+        const advertiserIndex = prev.indexOf(advertiserIn)
+        if (!advertiserIn || advertiserIndex === -1) {
+          prev.push(curr)
+          return prev
+        }
+        const lowestPrice = advertiserIn.sale_price || advertiserIn.price
+        const newPrice = curr.sale_price || curr.price
+        if (newPrice < lowestPrice) {
+          prev.splice(advertiserIndex, 1)
+          prev.push(curr)
+          return prev
+        }
+        return prev
+      }, [])
     client.close()
     if (data && data.length > 0) {
       return data

@@ -1,9 +1,12 @@
 const mongoose = require('mongoose')
 
+mongoose.set('useCreateIndex', true)
+
 const typeString = { type: String }
 const typeIndex = { type: String, index: true, required: true, text: true }
 const typeNum = { type: Number }
 const typeBool = { type: Boolean }
+const typeDate = { type: Date, default: Date.now }
 
 const UsNintendoSchema = new mongoose.Schema({
   availability: [typeString],
@@ -36,6 +39,7 @@ const UsNintendoSchema = new mongoose.Schema({
   type: typeString,
   url: typeString,
   virtualConsole: typeString,
+  last_update: typeDate
 })
 
 const EuNintendoSchema = new mongoose.Schema({
@@ -98,7 +102,7 @@ const EuNintendoSchema = new mongoose.Schema({
   wishlist_email_banner460w_image_url_s: typeString,
   wishlist_email_banner640w_image_url_s: typeString,
   wishlist_email_square_image_url_s: typeString,
-
+  last_update: typeDate
 })
 
 const USNintendo = mongoose.model('USNintendoGame', UsNintendoSchema)

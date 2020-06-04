@@ -83,19 +83,28 @@ module.exports = {
     SteamMarket: (steamGame) => steamGame,
     USSteamPrice: async (steamGame) => {
       if (steamGame) {
-        const usPrice = await getUsPrice(steamGame.steam_appid)
-        return usPrice
+        const usGame = await steam.getGameDetails(steamGame.steam_appid, false, 'us')
+        if (usGame.is_free) {
+          return 0
+        }
+        if (usGame.price_overview) {
+          return usGame.price_overview.final
+        }
+        return null
       }
       return null
     },
     EUSteamPrice: async (steamGame) => {
+      if (steamGame && steamGame.is_free) {
+        return 0
+      }
       if (steamGame && steamGame.price_overview) {
         return steamGame.price_overview.final
       }
       return null
     },
     // eslint-disable-next-line no-underscore-dangle
-    async __resolveReference(game) {
+    async __resolveReference(game, context) {
       if (game.STEAM_ID) {
         try {
           const steamGame = await steam.getGameDetails(game.STEAM_ID)

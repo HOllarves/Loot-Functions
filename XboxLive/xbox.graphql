@@ -189,7 +189,6 @@ type ProductProp {
   RevisionId: String
   ProductGroupId: String
   ProductGroupName: String
-
 }
 
 type ProductAttribute {

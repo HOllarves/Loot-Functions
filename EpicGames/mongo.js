@@ -8,7 +8,10 @@ const Mongo = () => {
     await require('../DB/client').startDB()
     const game = await EpicGame.findOne({ slug, currency: 'USD' })
     if (game && game.price) {
-      return game.price
+      if (game.price === 'Free') {
+        return 0
+      }
+      return parseInt(game.price, 10)
     }
     return null
   }
@@ -20,7 +23,10 @@ const Mongo = () => {
     await require('../DB/client').startDB()
     const game = await EpicGame.findOne({ slug, currency: 'EUR' })
     if (game && game.price) {
-      return game.price
+      if (game.price === 'Free') {
+        return 0
+      }
+      return parseInt(game.price, 10)
     }
     return null
   }
