@@ -1,9 +1,11 @@
 const Mongo = () => {
   const models = require('../db/models/nintendo')
+  const slugDict = require('../slug-dict/slug-dict')
   const search = async (region = 'US', q) => {
     const client = await require('../db/client').startDB()
     const model = region === 'US' ? models.USNintendo : models.EUNintendo
-    const data = await model.findOne({ slug: q })
+    const { slug } = slugDict({ slug: q })
+    const data = await model.findOne({ slug })
     client.close()
     if (data) {
       return data
