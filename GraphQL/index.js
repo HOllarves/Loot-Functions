@@ -13,6 +13,7 @@ const gateway = new ApolloGateway({
     { name: 'Nintendo', url: process.env.NINTENDO_SERVICE_URL },
     { name: 'CJ', url: process.env.CJ_SERVICE_URL },
     { name: 'EpicGames', url: process.env.EPIC_SERVICE_URL },
+    { name: 'GOG', url: process.env.GOG_SERVICE_URL },
   ],
 })
 

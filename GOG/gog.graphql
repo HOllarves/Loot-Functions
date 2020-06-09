@@ -1,0 +1,29 @@
+type GOGGame {
+  developer: String
+  publisher: String
+  gallery: [String]
+  video: GOGVid
+  supportedOperatingSystems: [String]
+  genres: [String]
+  globalReleaseDate: Int
+  isTBA: Boolean
+  price: Int!
+  isDiscounted: Boolean
+  name: String!
+  image: String
+  platform: String!
+  slug: String!
+  currency: String!
+  last_update: String
+}
+
+extend type Game @key(fields: "slug") {
+  slug: String! @external
+  GOGPrice: Int
+  GOGMarket: GOGGame
+}
+
+type GOGVid {
+  id: String
+  provider: String
+}
