@@ -23,7 +23,7 @@ module.exports = {
     },
   },
   RawDLC: {
-    products: ({ slug }, { currency, platform, region }) => search(slug, { currency, platform, region }),
+    products: ({ slug }, { currency, platform, region }) => search(slug, { currency, platform, region }, /DLC|Season Pass/i),
     // eslint-disable-next-line no-underscore-dangle
     async __resolveReference(game) {
       const { slug } = game

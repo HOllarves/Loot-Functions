@@ -3,7 +3,7 @@ const Mongo = () => {
   const search = async (slug) => {
     const client = await require('../../DB/client').startDB()
     const data = await GOG.findOne({ slug })
-    client.close()
+    await client.close()
     if (data) {
       return data
     }

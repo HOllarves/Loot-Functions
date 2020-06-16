@@ -16,7 +16,7 @@ const Mongo = () => {
     const client = await require('../db/client').startDB()
     const model = region === 'US' ? models.USNintendo : models.EUNintendo
     const data = await model.find()
-    client.close()
+    await client.close()
     if (data) {
       return data
     }

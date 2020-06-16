@@ -5,7 +5,7 @@ const Mongo = () => {
    * @param {String} slug
    */
   const getUSPrice = async (slug) => {
-    await require('../DB/client').startDB()
+    const client = await require('../DB/client').startDB()
     const game = await EpicGame.findOne({ slug, currency: 'USD' })
     if (game && game.price) {
       if (game.price === 'Free') {
@@ -13,6 +13,7 @@ const Mongo = () => {
       }
       return parseInt(game.price, 10)
     }
+    await client.close()
     return null
   }
   /**
@@ -20,7 +21,7 @@ const Mongo = () => {
    * @param {String} slug
    */
   const getEUPrice = async (slug) => {
-    await require('../DB/client').startDB()
+    const client = await require('../DB/client').startDB()
     const game = await EpicGame.findOne({ slug, currency: 'EUR' })
     if (game && game.price) {
       if (game.price === 'Free') {
@@ -28,6 +29,7 @@ const Mongo = () => {
       }
       return parseInt(game.price, 10)
     }
+    await client.close()
     return null
   }
   return { getEUPrice, getUSPrice }

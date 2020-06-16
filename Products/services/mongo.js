@@ -10,10 +10,10 @@ const Mongo = () => {
    * @param {String} name
    * @param {String} currency
    */
-  const search = async (name, { currency, platform, region }) => {
+  const search = async (name, { currency, platform, region }, type = /Full/i) => {
     const client = await require('../../DB/client').startDB()
     // const advertiserIds = process.env.CJ_ADVERTISER_IDS.split(',').filter((a) => a)
-    const query = { slug: name }
+    const query = { slug: name, type }
     if (currency) query.currency = currency
     if (platform) query.platform = platform
     if (region) query.$or = [{ region }, { region: 'Worldwide' }, { region: null }]
@@ -43,7 +43,7 @@ const Mongo = () => {
         }
         return prev
       }, [])
-    client.close()
+    await client.close()
     if (data && data.length > 0) {
       return data
     }
