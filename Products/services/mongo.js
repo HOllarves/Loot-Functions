@@ -3,6 +3,7 @@ const Mongo = () => {
   const IG = require('../db/models/instant-gaming')
   const IndieGala = require('../db/models/indie-gala-game')
   const GameBillet = require('../db/models/game-billet')
+  const DBQuery = require('../../DB/client')
   // const { search: CJSearch } = require('./cj')
   /**
    * Returns a specific product in
@@ -11,13 +12,12 @@ const Mongo = () => {
    * @param {String} currency
    */
   const search = async (name, { currency, platform, region }, type = /Full/i) => {
-    const client = await require('../../DB/client').startDB()
     // const advertiserIds = process.env.CJ_ADVERTISER_IDS.split(',').filter((a) => a)
     const query = { slug: name, type }
     if (currency) query.currency = currency
     if (platform) query.platform = platform
     if (region) query.$or = [{ region }, { region: 'Worldwide' }, { region: null }]
-    const promises = [CJ.find(query), IG.find(query), IndieGala.find(query), GameBillet.find(query)]
+    const promises = [DBQuery(CJ.find(query)), DBQuery(IG.find(query)), DBQuery(IndieGala.find(query)), DBQuery(GameBillet.find(query))]
     let [cjData, igData, indieGData, gameBilletData] = await Promise.all(promises)
     // eslint-disable-next-line no-underscore-dangle
     if (igData && igData.length) { igData = igData.map((i) => ({ ...i._doc, advertiser_name: 'Instant Gaming' })) }
@@ -43,7 +43,6 @@ const Mongo = () => {
         }
         return prev
       }, [])
-    await client.close()
     if (data && data.length > 0) {
       return data
     }
@@ -54,12 +53,10 @@ const Mongo = () => {
    * @param {String} currency
    */
   const searchByPartner = async (currency = 'USD') => {
-    const client = await require('../db/client').startDB()
     const advertiserIds = process.env.CJ_ADVERTISER_IDS.split(',').filter((a) => a)
     const promises = advertiserIds.map((id) => (
-      CJ.find({ currency, advertiser_id: id }).limit(10)))
+      DBQuery(CJ.find({ currency, advertiser_id: id }).limit(10))))
     const data = (await Promise.all(promises)).flat()
-    client.close()
     if (data) {
       return data
     }

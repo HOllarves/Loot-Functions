@@ -1,16 +1,25 @@
-const mongoose = require('mongoose')
+/**
+ * Creates a DB session, executes query and closes session
+ * @param {*} query
+ * @returns {*}
+ */
+const DBQuery = async query => {
+  const { connectDB, closeDB } = require("./config")
+  try {
+    await connectDB()
+  } catch (err) {
+    throw new Error("Unable to connect DB")
+  }
 
-const db = mongoose.connection
-
-const startDB = async () => {
-  mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-  return new Promise((resolve) => {
-    db.once('open', () => {
-      resolve(db)
-    })
-  })
+  try {
+    const result = await query
+    await closeDB()
+    return result
+  } catch (err) {
+    await closeDB()
+    console.log(err)
+    throw new Error("Error executing DB operation")
+  }
 }
 
-const stopDB = async () => db.close()
-
-module.exports = { startDB, stopDB }
+module.exports = DBQuery

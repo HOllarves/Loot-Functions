@@ -1,9 +1,8 @@
 const Mongo = () => {
   const GOG = require('../db/models/gog')
+  const DBQuery = require('../../DB/client')
   const search = async (slug) => {
-    const client = await require('../../DB/client').startDB()
-    const data = await GOG.findOne({ slug })
-    await client.close()
+    const data = await DBQuery(GOG.findOne({ slug }))
     if (data) {
       return data
     }

@@ -21,7 +21,7 @@ const server = new ApolloServer({ gateway, subscriptions: false, playground: tru
 
 module.exports = server.createHandler({
   cors: {
-    origin: '*',
+    origin: 'https://lootengine.gg',
     credentials: true,
   },
 })
